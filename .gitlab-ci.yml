@@ -1,0 +1,24 @@
+
+variables:
+  ANDROID_COMPILE_SDK: "29"
+  ANDROID_BUILD_TOOLS: "29.0.3"
+before_script:
+  - echo y | ${ANDROID_SDK_ROOT}/tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "platforms;android-${ANDROID_COMPILE_SDK}" >/dev/null
+  - echo y | ${ANDROID_SDK_ROOT}/tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "platform-tools" >/dev/null
+  - echo y | ${ANDROID_SDK_ROOT}/tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "build-tools;${ANDROID_BUILD_TOOLS}" >/dev/null
+  # temporarily disable checking for EPIPE error and use yes to accept all licenses
+  - set +o pipefail
+  - yes | ${ANDROID_SDK_ROOT}/tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --licenses
+  - set -o pipefail
+  - chmod +x gradlew
+build:
+  script:
+    - ./gradlew build
+  tags:
+    - android
+  artifacts:
+    when: always
+    paths:
+      - app/build/outputs/
+    reports:
+      junit: app/build/test-results/**/TEST-*.xml
