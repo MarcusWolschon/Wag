@@ -1,0 +1,2 @@
+biz/wolschon/wag/androidApp/BuildConfig.java
+ biz.wolschon.wag.androidApp.BuildConfig
