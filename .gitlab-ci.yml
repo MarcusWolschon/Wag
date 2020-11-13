@@ -22,4 +22,4 @@ build:
       - ./*/build/outputs/
     reports:
       junit: ./*/build/test-results/**/TEST-*.xml
-      codequality: ./*/build/reports/lint-results.xml
+      codequality: ./androidApp/build/reports/lint-results.xml
