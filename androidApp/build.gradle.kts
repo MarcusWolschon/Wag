@@ -20,8 +20,8 @@ dependencies {
 }
 kotlin {
     experimental {
-        coroutines 'enable'
-//        unsignedTypes 'enable'
+        coroutines('enable')
+//        unsignedTypes('enable')
     }
 
     dependencies {
