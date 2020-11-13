@@ -8,7 +8,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
 import biz.wolschon.wag.R
-import biz.wolschon.wag.bluetooth.CameraConnection
+import biz.wolschon.wag.bluetooth.DeviceConnection
 import biz.wolschon.wag.bluetooth.commands.SubscribeControlMessagesCommand
 
 @ExperimentalUnsignedTypes
