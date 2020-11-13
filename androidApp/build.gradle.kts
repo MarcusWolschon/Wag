@@ -18,10 +18,22 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
 }
+kotlin {
+    experimental {
+        coroutines 'enable'
+//        unsignedTypes 'enable'
+    }
+
+    dependencies {
+        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7"
+        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1"
+    }
+
+}
 android {
     compileSdkVersion(29)
     defaultConfig {
-        applicationId = "biz.wolschon.wag.androidApp"
+        applicationId = "biz.wolschon.wag"
         minSdkVersion(24)
         targetSdkVersion(29)
         versionCode = 1
