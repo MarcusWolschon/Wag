@@ -8,8 +8,7 @@ import biz.wolschon.wag.bluetooth.BLECommand
 import biz.wolschon.wag.bluetooth.BLECommandQueue
 import biz.wolschon.wag.R
 
-class InitialCommand(//private val cameraStatus: BluetoothGattCharacteristic,
-                     private val statusText: MutableLiveData<Int>,
+class InitialCommand(private val statusText: MutableLiveData<Int>,
                      private val ready: MutableLiveData<Boolean>,
                      private val nextCommands: Array<BLECommand>,
                      private val workQueue : BLECommandQueue) : BLECommand() {

@@ -213,7 +213,7 @@ class DeviceConnection(context: Context,
 
     private fun doInitialCommand() {
         workqueue.addCommand(
-                InitialCommand(deviceStatus,
+                InitialCommand(
                         statusText,
                         ready,
                         arrayOf(
