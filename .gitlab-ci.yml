@@ -22,4 +22,4 @@ build:
       - ./*/build/outputs/
     reports:
       junit: ./*/build/test-results/**/TEST-*.xml
-      lint: ./*/build/reports/lint-results.xml
+      codequality: ./*/build/reports/lint-results.xml
