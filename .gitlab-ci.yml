@@ -19,6 +19,8 @@ build:
   artifacts:
     when: always
     paths:
-      - app/build/outputs/
+      - ./*/build/outputs/apk
+      - ./*/build/outputs/aar
     reports:
-      junit: app/build/test-results/**/TEST-*.xml
+      junit: ./*/build/test-results/**/TEST-*.xml
+      codequality: ./androidApp/build/reports/lint-results.xml

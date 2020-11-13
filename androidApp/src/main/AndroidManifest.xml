@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="biz.wolschon.wag.androidApp">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="biz.wolschon.wag">
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- required for Bluetooth discovery -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
 
     <application
             android:allowBackup="false"
             android:supportsRtl="true"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".androidApp.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
