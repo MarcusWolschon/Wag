@@ -9,7 +9,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import biz.wolschon.wag.BuildConfig
 import biz.wolschon.wag.bluetooth.BLECommand
-//import biz.wolschon.wag.model.*
+import biz.wolschon.wag.model.*
 
 
 class SubscribeControlMessagesCommand(private val controlIn: BluetoothGattCharacteristic) : BLECommand() {

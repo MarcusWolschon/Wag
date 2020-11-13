@@ -24,7 +24,7 @@ class InitialCommand(private val statusText: MutableLiveData<Int>,
         /*val status = Status.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0)
         Log.d(TAG, "Status = 0x" + status.toString(16))*/
         ready.postValue(true)
-        statusText.postValue(R.string.status_ready)
+        //statusText.postValue(R.string.status_ready)
         nextCommands.forEach { workQueue.addCommand(it) }
     }
 

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import biz.wolschon.wag.shared.Greeting
 import android.widget.TextView
+import biz.wolschon.wag.R
 
 fun greet(): String {
     return Greeting().greeting()
