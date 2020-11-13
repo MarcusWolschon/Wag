@@ -1,5 +1,5 @@
 
-package biz.wolschon.bmpcc4krecord.bluetooth
+package biz.wolschon.wag.bluetooth
 
 import androidx.lifecycle.MutableLiveData
 import android.bluetooth.BluetoothAdapter
@@ -53,7 +53,7 @@ class DeviceScanner(private val mBluetoothAdapter: BluetoothAdapter,
                 if (result != null) {
                     val mDevices = devices.value?.toMutableList() ?: mutableListOf()
                     if (callbackType == ScanSettings.CALLBACK_TYPE_MATCH_LOST) {
-                        Log.i(TAG, "scan result: lost " + mDevices.size + " devices")
+                        Log.i(TAG, "scan result: lost ${mDevices.size} devices")
                         if (mDevices.removeAll { it.address == result.device.address }) {
                             // notify UI about update
                             devices.postValue(mDevices)
@@ -105,7 +105,7 @@ class DeviceScanner(private val mBluetoothAdapter: BluetoothAdapter,
     }
 
     private fun ScanCallback.onDeviceFound(mDevices: MutableList<BluetoothDevice>, device: BluetoothDevice) {
-        Log.i(TAG, "scan result: found " + mDevices.size + " devices")
+        Log.i(TAG, "scan result: found ${mDevices.size} devices")
         if (!contains(mDevices, device)) {
             mDevices.add(device)
 
