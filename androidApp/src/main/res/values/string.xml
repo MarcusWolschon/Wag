@@ -1,5 +1,6 @@
 
 <resources>
+    <string name="app_name">Wag</string>
     <string name="status_empty">Not Connected</string>
     <string name="status_getstatus">Getting status…</string>
     <string name="status_ready">Ready</string>
