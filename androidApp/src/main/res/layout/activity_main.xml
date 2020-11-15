@@ -1,59 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/main_view"
-    tools:context=".androidApp.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-  <Spinner
-      android:id="@+id/ergear_device_spinner"
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      app:layout_constrainnEnd_toStartOf="@+id/eargear_connect_button"
-      app:layout_constraintTop_toTopOf="@+id/eargear_connect_button"
-      app:layout_constraintBottom_toBottomOf="@+id/eargear_connect_button"
-      app:layout_constraintStart_toStartOf="parent"/>
+    <data>
 
-  <ToggleButton
-      android:id="@+id/eargear_connect_button"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textOn="DisConnect"
-      android:textOff="(Re)Connect"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintEnd_toStartOf="@id/scan_button" />
+        <import type="biz.wolschon.wag.model.DeviceDetailsViewModel" />
 
-  <Spinner
-      android:id="@+id/tail_device_spinner"
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      app:layout_constrainnEnd_toStartOf="@+id/tailgear_connect_button"
-      app:layout_constraintTop_toBottomOf="@id/eargear_connect_button"
-      app:layout_constraintBottom_toBottomOf="@+id/tailgear_connect_button"
-      app:layout_constraintStart_toStartOf="parent" />
+        <variable
+            name="viewModel"
+            type="DeviceDetailsViewModel" />
+    </data>
 
-  <ToggleButton
-      android:id="@+id/tailgear_connect_button"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:textOn="DisConnect"
-      android:textOff="(Re)Connect"
-      app:layout_constraintTop_toBottomOf="@id/eargear_connect_button"
-      app:layout_constraintStart_toStartOf="@id/eargear_connect_button"
-      app:layout_constraintEnd_toStartOf="@id/scan_button" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".androidApp.MainActivity">
 
-  <ToggleButton
-      android:id="@+id/scan_button"
-      android:layout_width="wrap_content"
-      android:layout_height="0dp"
-      android:textOn="Stop"
-      android:textOff="Scan"
-      app:layout_constraintTop_toTopOf="@id/eargear_connect_button"
-      app:layout_constraintBottom_toBottomOf="@id/tailgear_connect_button"
-      app:layout_constraintEnd_toEndOf="parent" />
+        <Spinner
+            android:id="@+id/ergear_device_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/eargear_connect_button"
+            app:layout_constraintEnd_toStartOf="@+id/eargear_connect_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/eargear_connect_button" />
+
+        <ToggleButton
+            android:id="@+id/eargear_connect_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff="(Re)Connect"
+            android:textOn="DisConnect"
+            app:layout_constraintEnd_toStartOf="@id/scan_button"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/tail_device_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tailgear_connect_button"
+            app:layout_constraintEnd_toStartOf="@+id/tailgear_connect_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/eargear_connect_button" />
+
+        <ToggleButton
+            android:id="@+id/tailgear_connect_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textOff="(Re)Connect"
+            android:textOn="DisConnect"
+            app:layout_constraintEnd_toStartOf="@id/scan_button"
+            app:layout_constraintStart_toStartOf="@id/eargear_connect_button"
+            app:layout_constraintTop_toBottomOf="@id/eargear_connect_button" />
+
+        <ToggleButton
+            android:id="@+id/scan_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:textOff="Scan"
+            android:textOn="Stop"
+            android:checked="@{viewModel.isScanning}"
+            android:onClick="@{(view) -> viewModel.startScanning()}"
+
+            app:layout_constraintBottom_toBottomOf="@id/tailgear_connect_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/eargear_connect_button" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

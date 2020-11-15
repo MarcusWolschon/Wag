@@ -2,20 +2,26 @@ package biz.wolschon.wag.androidApp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import biz.wolschon.wag.shared.Greeting
-import android.widget.TextView
-import biz.wolschon.wag.R
-
-fun greet(): String {
-    return Greeting().greeting()
-}
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
+import biz.wolschon.wag.databinding.ActivityMainBinding
+import biz.wolschon.wag.model.DeviceDetailsViewModel
 
 class MainActivity : AppCompatActivity() {
+
+    val viewModel by lazy {
+        ViewModelProvider(this).get(DeviceDetailsViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        val binding = ActivityMainBinding.inflate(layoutInflater)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
-        val tv: TextView = findViewById(R.id.text_view)
-        tv.text = greet()
+        setContentView(binding.root)
+
+        //TODO: ask for permissions to enable buttons
+        //TODO: add Jetpack Navigation
     }
 }
