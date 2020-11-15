@@ -6,16 +6,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main_view"
-    tools:context=".MainActivity">
+    tools:context=".androidApp.MainActivity">
 
-  <TextView
+  <Spinner
+      android:id="@+id/ergear_device_spinner"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      app:layout_constrainnEnd_toStartOf="@+id/eargear_connect_button"
+      app:layout_constraintTop_toTopOf="@+id/eargear_connect_button"
+      app:layout_constraintBottom_toBottomOf="@+id/eargear_connect_button"
+      app:layout_constraintStart_toStartOf="parent"/>
+
+  <Button
+      android:id="@+id/eargear_connect_button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="Hello World!"
-      android:id="@+id/text_view"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toTopOf="parent"/>
+      android:text="(Re)Connect"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/scan_button" />
+
+  <Spinner
+      android:id="@+id/tail_device_spinner"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      app:layout_constrainnEnd_toStartOf="@+id/tailgear_connect_button"
+      app:layout_constraintTop_toBottomOf="@id/eargear_connect_button"
+      app:layout_constraintBottom_toBottomOf="@+id/tailgear_connect_button"
+      app:layout_constraintStart_toStartOf="parent" />
+
+  <Button
+      android:id="@+id/tailgear_connect_button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:text="(Re)Connect"
+      app:layout_constraintTop_toBottomOf="@id/eargear_connect_button"
+      app:layout_constraintStart_toStartOf="@id/eargear_connect_button"
+      app:layout_constraintEnd_toStartOf="@id/scan_button" />
+
+  <ToggleButton
+      android:id="@+id/scan_button"
+      android:layout_width="wrap_content"
+      android:layout_height="0dp"
+      android:textOn="Stop"
+      android:textOff="Scan"
+      app:layout_constraintTop_toTopOf="@id/eargear_connect_button"
+      app:layout_constraintBottom_toBottomOf="@id/tailgear_connect_button"
+      app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
