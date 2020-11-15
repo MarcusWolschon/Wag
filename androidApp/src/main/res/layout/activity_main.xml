@@ -19,7 +19,7 @@
         tools:context=".androidApp.MainActivity">
 
         <Spinner
-            android:id="@+id/ergear_device_spinner"
+            android:id="@+id/ear_device_spinner"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@+id/eargear_connect_button"

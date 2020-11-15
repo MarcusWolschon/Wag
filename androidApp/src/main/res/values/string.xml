@@ -4,10 +4,13 @@
     <string name="status_empty">Not Connected</string>
     <string name="status_getstatus">Getting status…</string>
     <string name="status_ready">Ready</string>
-    <string name="status_disconnected">Disconnected (touch camera to reconnect)</string>
+    <string name="status_disconnected">Disconnected</string>
     <string name="status_reconnecting">Reconnecting…</string>
     <string name="status_discovering">Discovering services…</string>
     <string name="status_checking_services">Checking services…</string>
     <string name="status_failed">Failed</string>
+
+    <string name="message_nodevicefound">no device found</string>
+    <string name="postfix_not_paired"> (NOT PAIRED)</string>
 
 </resources>

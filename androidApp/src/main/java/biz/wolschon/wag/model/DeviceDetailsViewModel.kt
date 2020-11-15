@@ -4,14 +4,11 @@ import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import android.util.Log
-import androidx.lifecycle.*
-import biz.wolschon.wag.R
-import biz.wolschon.wag.bluetooth.DeviceConnection
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import biz.wolschon.wag.bluetooth.DeviceScanner
-import biz.wolschon.wag.bluetooth.commands.SubscribeControlMessagesCommand
 
-@ExperimentalUnsignedTypes
 class DeviceDetailsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val devicesInternal = MutableLiveData<List<BluetoothDevice>>()

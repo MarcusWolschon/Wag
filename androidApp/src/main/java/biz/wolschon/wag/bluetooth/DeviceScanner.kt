@@ -13,7 +13,6 @@ import android.os.ParcelUuid
 import android.util.Log
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class DeviceScanner(private val mBluetoothAdapter: BluetoothAdapter,
@@ -24,7 +23,7 @@ class DeviceScanner(private val mBluetoothAdapter: BluetoothAdapter,
     fun scan() {
         Log.i(TAG, "starting scan for device with service ${BLEConstants.UUID_SERVICE}...")
 
-        // only blackmagic cameras
+        // only compatible devices
         val filter1 = ScanFilter.Builder()
                 .setServiceUuid(ParcelUuid.fromString(BLEConstants.UUID_SERVICE))
                 .build()
@@ -91,17 +90,6 @@ class DeviceScanner(private val mBluetoothAdapter: BluetoothAdapter,
                 settings,
                 callback)
 
-        // check the devices we already know
-/*TODO: experimental        mBluetoothAdapter.bondedDevices?.let {
-            for (device in it) {
-                Log.i(TAG, "checking already paired device ${device.name} at ${device.address}")
-                if (device.name.startsWith("Pocket Cinema Camera 4K")
-                        || device.uuids.orEmpty().any { it.uuid.equals(CameraConnection.UUID_BLACKMAGIC_CAMERA_SERVICE)}) {
-                    val mDevices = devices.value?.toMutableList() ?: mutableListOf()
-                    callback.onDeviceFound(mDevices, device)
-                }
-            }
-        }*/
     }
 
     private fun ScanCallback.onDeviceFound(mDevices: MutableList<BluetoothDevice>, device: BluetoothDevice) {

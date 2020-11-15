@@ -16,7 +16,7 @@ class InitialCommand(private val statusText: MutableLiveData<Int>,
     override fun execute(bluetoothGatt: BluetoothGatt): Boolean {
         /*Log.d(TAG, "Reading Status...")
         statusText.postValue(R.string.status_getstatus)
-        return bluetoothGatt.readCharacteristic(cameraStatus);*/
+        return bluetoothGatt.readCharacteristic(deviceStatus);*/
         return true
     }
 

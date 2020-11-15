@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("kotlin-kapt")
     id("kotlin-android-extensions")
 }
 group = "biz.wolschon.wag"

@@ -65,7 +65,7 @@ class BLECommandQueue(private val bluetoothGatt: BluetoothGatt,
     }
 
     /**
-     * Called by [CameraConnection] when a callback was retrieved.
+     * Called by [DeviceConnection] when a callback was retrieved.
      * Attempt to execute the next command in the queue
      */
     fun commandFinished() {
