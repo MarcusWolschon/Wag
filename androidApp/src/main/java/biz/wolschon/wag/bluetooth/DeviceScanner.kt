@@ -22,6 +22,7 @@ class DeviceScanner(
                     private val isScanning: MutableLiveData<Boolean>) {
 
     fun stop() {
+        Log.i(TAG, "stop()")
         mBluetoothAdapter.bluetoothLeScanner.stopScan(scanCallback)
         isScanning.postValue(false)
     }
