@@ -6,10 +6,15 @@
     <data>
 
         <import type="biz.wolschon.wag.model.DeviceDetailsViewModel" />
+        <import type="androidx.lifecycle.LiveData"/>
 
         <variable
             name="viewModel"
             type="DeviceDetailsViewModel" />
+
+        <variable
+            name="permissionsGranted"
+            type="LiveData&lt;Boolean&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,8 +36,12 @@
             android:id="@+id/eargear_connect_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:textOff="(Re)Connect"
             android:textOn="DisConnect"
+
+            android:enabled="@{permissionsGranted &amp;&amp; viewModel.bluetoothSupported &amp;&amp; viewModel.bluetoothEnabled}"
+
             app:layout_constraintEnd_toStartOf="@id/scan_button"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,8 +58,12 @@
             android:id="@+id/tailgear_connect_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+
             android:textOff="(Re)Connect"
             android:textOn="DisConnect"
+
+            android:enabled="@{permissionsGranted &amp;&amp; viewModel.bluetoothSupported &amp;&amp; viewModel.bluetoothEnabled}"
+
             app:layout_constraintEnd_toStartOf="@id/scan_button"
             app:layout_constraintStart_toStartOf="@id/eargear_connect_button"
             app:layout_constraintTop_toBottomOf="@id/eargear_connect_button" />
@@ -61,8 +74,10 @@
             android:layout_height="0dp"
             android:textOff="Scan"
             android:textOn="Stop"
+
+            android:enabled="@{permissionsGranted &amp;&amp; viewModel.bluetoothSupported &amp;&amp; viewModel.bluetoothEnabled}"
             android:checked="@{viewModel.isScanning}"
-            android:onClick="@{(view) -> viewModel.startScanning()}"
+            android:onClick="@{(view) -> viewModel.toggleScanning() }"
 
             app:layout_constraintBottom_toBottomOf="@id/tailgear_connect_button"
             app:layout_constraintEnd_toEndOf="parent"

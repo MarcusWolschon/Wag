@@ -18,7 +18,7 @@ class DeviceConnection(context: Context,
                        private val ready: MutableLiveData<Boolean>,
                        private val viewModel: DeviceDetailsViewModel,
                        private val statusText: MutableLiveData<Int>,
-                       device: BluetoothDevice) : BluetoothGattCallback() {
+                       val device: BluetoothDevice) : BluetoothGattCallback() {
 
     private var bluetoothGatt: BluetoothGatt
     private var workqueue: BLECommandQueue
@@ -180,7 +180,7 @@ class DeviceConnection(context: Context,
             return
         }
         statusText.postValue(R.string.status_checking_services)
-        var service = gatt.getService(UUID.fromString(BLEConstants.UUID_SERVICE))
+        val service = gatt.getService(UUID.fromString(BLEConstants.UUID_SERVICE))
         if (service == null) {
             Log.e(TAG, "Device Service missing")
             statusText.postValue(R.string.status_failed)

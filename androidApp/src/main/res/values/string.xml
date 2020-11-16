@@ -13,4 +13,13 @@
     <string name="message_nodevicefound">no device found</string>
     <string name="postfix_not_paired"> (NOT PAIRED)</string>
 
+    <string name="request_permission_message">To scan for Bluetooth devices, the permission %1s is required.</string>
+    <string name="request_permission_ok">OK</string>
+    <string name="request_permission_deny">Deny</string>
+    <string name="request_permission_denied_message">We will not scan for Bluetooth devices because %1s is not granted.</string>
+
+
+    <string name="error_disabled_bluetooth">Bluetooth is not enabled</string>
+    <string name="error_no_bluetooth">Bluetooth is not enabled</string>
+
 </resources>
