@@ -2,16 +2,12 @@ package biz.wolschon.wag.androidApp
 
 import android.Manifest
 import android.bluetooth.BluetoothDevice
-import android.content.DialogInterface
-import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import biz.wolschon.wag.R
 import biz.wolschon.wag.databinding.ActivityMainBinding
 import biz.wolschon.wag.model.DeviceDetailsViewModel
