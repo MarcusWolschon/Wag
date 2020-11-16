@@ -50,7 +50,11 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("com.google.android.material:material:1.2.1")
-    implementation("androidx.appcompat:appcompat:1.2.0")
+    implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
+
+    // asking for permissions in a  new way
+    implementation("androidx.activity:activity-ktx:1.2.0-beta01")
+
 
     // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
@@ -59,8 +63,8 @@ dependencies {
 
 
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 }
 android {
     compileSdkVersion(29)
@@ -79,4 +83,15 @@ android {
     buildFeatures {
         dataBinding = true
     }
+
+    compileOptions {
+        sourceCompatibility("1.8")
+        targetCompatibility("1.8")
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
 }
