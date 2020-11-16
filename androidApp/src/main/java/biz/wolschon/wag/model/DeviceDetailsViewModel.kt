@@ -11,25 +11,53 @@ import biz.wolschon.wag.bluetooth.DeviceScanner
 
 class DeviceDetailsViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val bluetoothManager by lazy(LazyThreadSafetyMode.NONE) {
+        application.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+    }
+
+    ///////////////////////////////////////////////////////
+    //               SCANNING
+    ///////////////////////////////////////////////////////
+
     private val devicesInternal = MutableLiveData<List<BluetoothDevice>>()
     val devices : LiveData<List<BluetoothDevice>> = devicesInternal
-    val selectedDevice = MutableLiveData<BluetoothDevice>()
     private val isScanningInternal = MutableLiveData<Boolean>()
     val isScanning : LiveData<Boolean> = isScanningInternal
     private val scanner by lazy {
         DeviceScanner(
             bluetoothManager.adapter,
             devices = devicesInternal,
-            selectedDevice = selectedDevice,
+            onDeviceLost = this::onDeviceLost,
             isScanning = isScanningInternal
         )
     }
+
     fun startScanning() {
-        scanner.scan()
+        if (isScanning.value != true) {
+            scanner.scan()
+        }
     }
 
-
-    private val bluetoothManager by lazy(LazyThreadSafetyMode.NONE) {
-        application.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+    fun sopScanning() {
+        scanner.stop()
     }
+
+    ///////////////////////////////////////////////////////
+    //               CONNECTIONS
+    ///////////////////////////////////////////////////////
+
+    val selectedEarDevice = MutableLiveData<BluetoothDevice>()
+    val selectedTailDevice = MutableLiveData<BluetoothDevice>()
+    private fun onDeviceLost(dev: BluetoothDevice) {
+        selectedEarDevice.value?.let { ear ->
+            if (ear.address == dev.address)
+                selectedEarDevice.postValue(null)
+        }
+
+        selectedTailDevice.value?.let { tail ->
+            if (tail.address == dev.address)
+                selectedTailDevice.postValue(null)
+        }
+    }
+
 }
