@@ -14,6 +14,7 @@ import android.content.pm.PackageManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import biz.wolschon.wag.bluetooth.DeviceConnection
 import biz.wolschon.wag.bluetooth.DeviceScanner
 
 
@@ -95,17 +96,51 @@ class DeviceDetailsViewModel(private val app: Application) : AndroidViewModel(ap
     //               CONNECTIONS
     ///////////////////////////////////////////////////////
 
-    val selectedEarDevice = MutableLiveData<BluetoothDevice>()
-    val selectedTailDevice = MutableLiveData<BluetoothDevice>()
+    val selectedEarDevice = MutableLiveData<DeviceConnection>()
+    val selectedTailDevice = MutableLiveData<DeviceConnection>()
     private fun onDeviceLost(dev: BluetoothDevice) {
-        selectedEarDevice.value?.let { ear ->
-            if (ear.address == dev.address)
+        selectedEarDevice.value?.device?.let { earDevice ->
+            if (earDevice.address == dev.address)
                 selectedEarDevice.postValue(null)
         }
 
-        selectedTailDevice.value?.let { tail ->
-            if (tail.address == dev.address)
+        selectedTailDevice.value?.device?.let { tailDevice ->
+            if (tailDevice.address == dev.address)
                 selectedTailDevice.postValue(null)
+        }
+    }
+
+    fun toggleEarConnection(context: Context, device: BluetoothDevice) {
+        val current = selectedEarDevice.value
+        if (current == null) {
+            selectedEarDevice.postValue(DeviceConnection(
+                context = context,
+                adapter = BluetoothAdapter.getDefaultAdapter(),
+                MutableLiveData<Boolean>(),
+                this,
+                MutableLiveData<Int>(),
+                device
+            ))
+        } else {
+            current.disconnect()
+            selectedEarDevice.postValue(null)
+        }
+    }
+
+    fun toggleTailConnection(context: Context, device: BluetoothDevice) {
+        val current = selectedTailDevice.value
+        if (current == null) {
+            selectedTailDevice.postValue(DeviceConnection(
+                context = context,
+                adapter = BluetoothAdapter.getDefaultAdapter(),
+                MutableLiveData<Boolean>(),
+                this,
+                MutableLiveData<Int>(),
+                device
+            ))
+        } else {
+            current.disconnect()
+            selectedTailDevice.postValue(null)
         }
     }
 

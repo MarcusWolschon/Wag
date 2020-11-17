@@ -7,6 +7,7 @@
 
         <import type="biz.wolschon.wag.model.DeviceDetailsViewModel" />
         <import type="androidx.lifecycle.LiveData"/>
+        <import type="android.bluetooth.BluetoothDevice"/>
 
         <variable
             name="viewModel"
@@ -41,6 +42,7 @@
             android:textOn="DisConnect"
 
             android:enabled="@{permissionsGranted &amp;&amp; viewModel.bluetoothSupported &amp;&amp; viewModel.bluetoothEnabled}"
+            android:onClick="@{view -> viewModel.toggleEarConnection(context, (BluetoothDevice) earDeviceSpinner.getSelectedItem())}"
 
             app:layout_constraintEnd_toStartOf="@id/scan_button"
             app:layout_constraintTop_toTopOf="parent" />
@@ -63,6 +65,7 @@
             android:textOn="DisConnect"
 
             android:enabled="@{permissionsGranted &amp;&amp; viewModel.bluetoothSupported &amp;&amp; viewModel.bluetoothEnabled}"
+            android:onClick="@{view -> viewModel.toggleTailConnection(context, (BluetoothDevice) tailDeviceSpinner.getSelectedItem())}"
 
             app:layout_constraintEnd_toStartOf="@id/scan_button"
             app:layout_constraintStart_toStartOf="@id/eargear_connect_button"
