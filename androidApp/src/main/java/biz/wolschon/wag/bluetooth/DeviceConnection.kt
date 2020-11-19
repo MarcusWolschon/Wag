@@ -1,8 +1,10 @@
-
 package biz.wolschon.wag.bluetooth
 
 import android.bluetooth.*
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import biz.wolschon.wag.BuildConfig
@@ -13,12 +15,14 @@ import java.util.*
 
 
 @OptIn(ExperimentalUnsignedTypes::class)
-class DeviceConnection(context: Context,
-                       private val adapter: BluetoothAdapter,
-                       private val ready: MutableLiveData<Boolean>,
-                       private val viewModel: DeviceDetailsViewModel,
-                       private val statusText: MutableLiveData<Int>,
-                       val device: BluetoothDevice) : BluetoothGattCallback() {
+class DeviceConnection(
+    val context: Context,
+    private val adapter: BluetoothAdapter,
+    private val ready: MutableLiveData<Boolean>,
+    private val viewModel: DeviceDetailsViewModel,
+    private val statusText: MutableLiveData<Int>,
+    val device: BluetoothDevice
+) : BluetoothGattCallback() {
 
     private var bluetoothGatt: BluetoothGatt
     private var workqueue: BLECommandQueue
@@ -30,99 +34,10 @@ class DeviceConnection(context: Context,
     init {
         Log.d(TAG, "init device=${device.name} address=${device.address}")
         ready.postValue(false)
-        bluetoothGatt = device.connectGatt(context, false, this)
+        bluetoothGatt = device.connectGatt(context, false, this, BluetoothDevice.TRANSPORT_LE)
         workqueue = BLECommandQueue(bluetoothGatt, statusText)
-/*        registerPairingRequestListener()
-
-        when(device.bondState) {
-            BluetoothDevice.BOND_BONDED -> {
-                // waiting for connected-event
-            }
-            BluetoothDevice.BOND_NONE -> {
-                registerBondListener()
-                Log.d(TAG, "initiating bonding...")
-                device.createBond()
-            }
-            BluetoothDevice.BOND_BONDING ->
-                registerBondListener()
-        }*/
-    }
-/*    val pairingRequestListener = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (BluetoothDevice.ACTION_PAIRING_REQUEST == intent.action) {
-                val dev: BluetoothDevice  = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                val type = intent.getIntExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, BluetoothDevice.ERROR)
-
-                if (dev.address != device.address) {
-                    Log.d(TAG, "pairing request for different device -> ignored")
-                    return
-                }
-
-                if (type == BluetoothDevice.PAIRING_VARIANT_PIN) {
-                    device.setPin(Util.IntToPasskey(pinCode()))
-                    abortBroadcast()
-                } else {
-                    Log.w(TAG, "Unexpected pairing type: $type")
-                }
-            }
-        }
     }
 
-    /**
-     * If the bond information is wrong (e.g. it has been deleted on the peripheral) then
-     * discoverServices() will cause a disconnect. <br/>
-     * You need to delete the bonding information and reconnect.
-     */
-    fun deleteBondInformation() {
-        try {
-            // FFS Google, just unhide the method.
-            // Method m = device.getClass().getMethod("removeBond", (Class[]) null);
-            val m = device.javaClass.getMethod("removeBond", null)
-            m.invoke(device, null as Array<Any>?)
-        } catch (e: Exception) {
-            Log.e(TAG, e.message, e)
-        }
-
-    }
-
-    private fun registerPairingRequestListener() {
-        Log.d(TAG, "registering bonding-requesrt receiver")
-        val filter = IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST)
-        filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY - 1);
-        context.registerReceiver(pairingRequestListener, filter)
-
-    }
-
-    private fun registerBondListener() {
-        Log.d(TAG, "registering bonding receiver")
-        val filter = IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
-        context.registerReceiver(object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                val bondState = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, -1)
-                val previousBondState = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, -1)
-
-                Log.d(TAG, "Bond state changed for: " + device.address + " new state: " + bondState + " previous: " + previousBondState)
-
-                // skip other devices
-                if (device.address != bluetoothGatt.getDevice().getAddress()) {
-                    return
-                }
-
-                if (bondState == BluetoothDevice.BOND_BONDED) {
-                    Log.i(TAG, "new bonding state: Bonded/Paired")
-                    statusText.postValue(R.string.status_discovering)
-                    bluetoothGatt.discoverServices()
-                    context.unregisterReceiver(this)
-                } else if (bondState == BluetoothDevice.BOND_BONDING) {
-                    Log.d(TAG, "new bonding state: Bonding...")
-                } else if (bondState == BluetoothDevice.BOND_NONE) {
-                    Log.d(TAG, "new bonding state: No longer bonded/paired")
-                    // what to do?
-                }
-            }
-        }, filter);
-    }*/
 
     fun reconnect() {
         Log.i(TAG, "reconnecting...")
@@ -144,35 +59,36 @@ class DeviceConnection(context: Context,
     }
 
 
-
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
+        val bondState = device.bondState
         when (newState) {
+            BluetoothProfile.STATE_CONNECTING -> {
+                Log.i(TAG, "Connecting...")
+            }
+            BluetoothProfile.STATE_DISCONNECTING -> {
+                Log.i(TAG, "Disconnecting...")
+            }
             BluetoothProfile.STATE_CONNECTED -> {
                 Log.i(TAG, "Connected")
-                //if (device.bondState == BluetoothDevice.BOND_BONDED) {
-                    statusText.postValue(R.string.status_discovering)
-                    gatt.discoverServices()
-                /*} else {
-                    Log.i(TAG, "Connected but not yet bonded -> ignored")
-                }*/
+                statusText.postValue(R.string.status_discovering)
+                gatt.discoverServices()
             }
             BluetoothProfile.STATE_DISCONNECTED -> {
-                Log.i(TAG, "Disconnected")
+                if (status == BluetoothGatt.GATT_SUCCESS) {
+                    Log.i(TAG, "Disconnected because we wanted to")
+                } else {
+                    Log.e(TAG, "Disconnected due to an error status=$status bondState=$bondState")
+                }
                 statusText.postValue(R.string.status_disconnected)
+                gatt.close()
                 ready.postValue(false)
-
-/*                if (deviceService == null) {
-                    // This can happen if the bond information is incorrect. Delete it and reconnect.
-                    deleteBondInformation()
-                    reconnect()
-                }*/
             }
         }
     }
 
 
-
     override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
+        Log.d(TAG, "Service discovery")
         if (status != BluetoothGatt.GATT_SUCCESS) {
             Log.e(TAG, "Service discovery failed")
             statusText.postValue(R.string.status_failed)
@@ -189,7 +105,8 @@ class DeviceConnection(context: Context,
         }
         deviceService = service
 
-        var characteristic = service.getCharacteristic(UUID.fromString(BLEConstants.UUID_READ_CHARACTERISTIC))
+        var characteristic =
+            service.getCharacteristic(UUID.fromString(BLEConstants.UUID_READ_CHARACTERISTIC))
         if (characteristic == null) {
             Log.e(TAG, "Service is missing READ characteristic")
             statusText.postValue(R.string.status_failed)
@@ -198,7 +115,8 @@ class DeviceConnection(context: Context,
         }
         controlIn = characteristic
 
-        characteristic = service.getCharacteristic(UUID.fromString(BLEConstants.UUID_WRITE_CHARACTERISTIC))
+        characteristic =
+            service.getCharacteristic(UUID.fromString(BLEConstants.UUID_WRITE_CHARACTERISTIC))
         if (characteristic == null) {
             Log.e(TAG, "Service is missing WRITE characteristic")
             statusText.postValue(R.string.status_failed)
@@ -212,19 +130,25 @@ class DeviceConnection(context: Context,
     }
 
     private fun doInitialCommand() {
+        Log.d(TAG, "initial commands")
         workqueue.addCommand(
-                InitialCommand(
-                        statusText,
-                        ready,
-                        arrayOf(
-                            //TODO: initial commands
-                        ),
-                        workqueue)
+            InitialCommand(
+                statusText,
+                ready,
+                arrayOf(
+                    //TODO: initial commands
+                ),
+                workqueue
+            )
         )
     }
 
 
-    override fun onCharacteristicRead(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic?, status: Int) {
+    override fun onCharacteristicRead(
+        gatt: BluetoothGatt,
+        characteristic: BluetoothGattCharacteristic?,
+        status: Int
+    ) {
         Log.d(TAG, "onCharacteristicRead()")
 /*        if (BluetoothGatt.GATT_INSUFFICIENT_AUTHENTICATION == status ||
                 BluetoothGatt.GATT_INSUFFICIENT_ENCRYPTION == status) {
@@ -255,7 +179,11 @@ class DeviceConnection(context: Context,
         workqueue.commandFinished()
     }
 
-    override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic?, status: Int) {
+    override fun onCharacteristicWrite(
+        gatt: BluetoothGatt,
+        characteristic: BluetoothGattCharacteristic?,
+        status: Int
+    ) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onCharacteristicWrite()")
         }
@@ -271,20 +199,31 @@ class DeviceConnection(context: Context,
         workqueue.commandFinished()
     }
 
-    override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
+    override fun onCharacteristicChanged(
+        gatt: BluetoothGatt,
+        characteristic: BluetoothGattCharacteristic
+    ) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onCharacteristicChanged()")
         }
 
-        if(characteristic.uuid.equals(BLEConstants.UUID_READ_CHARACTERISTIC)) {
-            SubscribeControlMessagesCommand.onControlMessageCharacteristicChanged(gatt, characteristic, viewModel)
+        if (characteristic.uuid.equals(BLEConstants.UUID_READ_CHARACTERISTIC)) {
+            SubscribeControlMessagesCommand.onControlMessageCharacteristicChanged(
+                gatt,
+                characteristic,
+                viewModel
+            )
         }
 
         // just for completeness sake
         workqueue.currentCommand?.onCharacteristicChanged(gatt, characteristic)
     }
 
-    override fun onDescriptorRead(gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int) {
+    override fun onDescriptorRead(
+        gatt: BluetoothGatt?,
+        descriptor: BluetoothGattDescriptor?,
+        status: Int
+    ) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onDescriptorRead()")
         }
@@ -297,9 +236,16 @@ class DeviceConnection(context: Context,
         workqueue.commandFinished()
     }
 
-    override fun onDescriptorWrite(gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int) {
+    override fun onDescriptorWrite(
+        gatt: BluetoothGatt?,
+        descriptor: BluetoothGattDescriptor?,
+        status: Int
+    ) {
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "onDescriptorWrite() descriptor=${descriptor?.uuid} status=0x${status.toString(16)}")
+            Log.d(
+                TAG,
+                "onDescriptorWrite() descriptor=${descriptor?.uuid} status=0x${status.toString(16)}"
+            )
         }
         if (status != BluetoothGatt.GATT_SUCCESS) {
             Log.e(TAG, "Descriptor write failed")
@@ -313,7 +259,7 @@ class DeviceConnection(context: Context,
     ///////////////////////////////////////////////////////////////////
     //       Actions
 
-    fun execute(cmd : BLECommand) {
+    fun execute(cmd: BLECommand) {
         workqueue.addCommand(cmd)
     }
 
