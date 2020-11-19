@@ -1,4 +1,3 @@
-
 package biz.wolschon.wag.bluetooth
 
 import androidx.lifecycle.MutableLiveData
@@ -8,19 +7,23 @@ import android.util.Log
 import java.util.*
 import java.util.function.Predicate
 
-class BLECommandQueue(private val bluetoothGatt: BluetoothGatt,
-                      private val statusText: MutableLiveData<Int>) {
+class BLECommandQueue(
+    private val bluetoothGatt: BluetoothGatt,
+    private val statusText: MutableLiveData<Int>,
+    val connection: DeviceConnection
+) {
+
 
     private val workQueue = LinkedList<BLECommand>()
-    private var mCurrentCommand : BLECommand? = null
-    val currentCommand : BLECommand?
-    get() = mCurrentCommand
+    private var mCurrentCommand: BLECommand? = null
+    val currentCommand: BLECommand?
+        get() = mCurrentCommand
 
     /**
      * Add a command to the queue.
      * If no command is currently running, execute the next one.
      */
-    fun addCommand(cmd : BLECommand) {
+    fun addCommand(cmd: BLECommand) {
         synchronized(workQueue) {
             workQueue.add(cmd)
         }
@@ -36,7 +39,7 @@ class BLECommandQueue(private val bluetoothGatt: BluetoothGatt,
     /**
      * Drop all other commands and add this one to be executed next/now.
      */
-    fun flushAndAddCommand(cmd : BLECommand) {
+    fun flushAndAddCommand(cmd: BLECommand) {
         synchronized(workQueue) {
             workQueue.clear()
             workQueue.add(cmd)
@@ -49,7 +52,7 @@ class BLECommandQueue(private val bluetoothGatt: BluetoothGatt,
     /**
      * Drop all other commands OFT THIS TYPE and add this one to be executed next/now.
      */
-    fun flushSimilarAndAddCommand(cmd : BLECommand) {
+    fun flushSimilarAndAddCommand(cmd: BLECommand) {
         synchronized(workQueue) {
             val iter = workQueue.iterator()
             while (iter.hasNext()) {
@@ -89,7 +92,7 @@ class BLECommandQueue(private val bluetoothGatt: BluetoothGatt,
             Log.d(TAG, "no next command to start")
             return
         }
-        if (cmd.execute(bluetoothGatt)) {
+        if (cmd.execute(connection)) {
             Log.d(TAG, "command ${cmd.javaClass.simpleName} started")
         } else {
             Log.e(TAG, "command ${cmd.javaClass.simpleName} failed to start")
