@@ -24,18 +24,18 @@ class DeviceConnection(
     val device: BluetoothDevice
 ) : BluetoothGattCallback() {
 
-    private var bluetoothGatt: BluetoothGatt
+    internal var bluetoothGatt: BluetoothGatt
     private var workqueue: BLECommandQueue
     private var deviceService: BluetoothGattService? = null
-    internal var controlOut: BluetoothGattCharacteristic? = null
-    private lateinit var controlIn: BluetoothGattCharacteristic
+    internal lateinit var controlOut: BluetoothGattCharacteristic
+    internal lateinit var controlIn: BluetoothGattCharacteristic
 
 
     init {
         Log.d(TAG, "init device=${device.name} address=${device.address}")
         ready.postValue(false)
         bluetoothGatt = device.connectGatt(context, false, this, BluetoothDevice.TRANSPORT_LE)
-        workqueue = BLECommandQueue(bluetoothGatt, statusText)
+        workqueue = BLECommandQueue(bluetoothGatt, statusText, this)
     }
 
 
@@ -131,14 +131,11 @@ class DeviceConnection(
 
     private fun doInitialCommand() {
         Log.d(TAG, "initial commands")
+        workqueue.addCommand(SubscribeControlMessagesCommand())
         workqueue.addCommand(
             InitialCommand(
                 statusText,
-                ready,
-                arrayOf(
-                    //TODO: initial commands
-                ),
-                workqueue
+                ready
             )
         )
     }
@@ -196,7 +193,9 @@ class DeviceConnection(
             Log.d(TAG, "write success")
         }
         workqueue.currentCommand?.onCharacteristicWrite(gatt, characteristic, status)
-        workqueue.commandFinished()
+        if (workqueue.currentCommand?.expectingResult != true) {
+            workqueue.commandFinished()
+        }
     }
 
     override fun onCharacteristicChanged(
