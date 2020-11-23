@@ -17,23 +17,24 @@ class InitialCommand(
 
     override val expectingResult: Boolean = true
 
-    override fun execute(connection: DeviceConnection): Boolean {
+    override fun execute(deviceConnection: DeviceConnection): Boolean {
         /*Log.d(TAG, "Reading Status...")
         statusText.postValue(R.string.status_getstatus)
         return bluetoothGatt.readCharacteristic(deviceStatus);*/
 
-        val characteristic = connection.controlOut
+        val characteristic = deviceConnection.controlOut
             .apply {
                 value = "VER".toByteArray()// ask for firmware version as a test command
+                // result: "VER 1.3.2"
             }
-        return connection.bluetoothGatt.writeCharacteristic(characteristic)
+        return deviceConnection.bluetoothGatt.writeCharacteristic(characteristic)
     }
 
     override fun onCharacteristicChanged(
         gatt: BluetoothGatt?,
         characteristic: BluetoothGattCharacteristic?
     ) {
-        Log.d(TAG, "onCharacteristicChanged ${characteristic?.getStringValue(0)}")
+        Log.d(TAG, "onCharacteristicChanged '${characteristic?.getStringValue(0)}'")
         super.onCharacteristicChanged(gatt, characteristic)
     }
 

@@ -13,7 +13,6 @@ class BLECommandQueue(
     val connection: DeviceConnection
 ) {
 
-
     private val workQueue = LinkedList<BLECommand>()
     private var mCurrentCommand: BLECommand? = null
     val currentCommand: BLECommand?

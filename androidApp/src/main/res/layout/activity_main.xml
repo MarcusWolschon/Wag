@@ -25,51 +25,13 @@
         tools:context=".androidApp.MainActivity">
 
         <Spinner
-            android:id="@+id/ear_device_spinner"
+            android:id="@+id/connect_device_spinner"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/eargear_connect_button"
-            app:layout_constraintEnd_toStartOf="@+id/eargear_connect_button"
+            app:layout_constraintTop_toTopOf="@+id/connect_button"
+            app:layout_constraintBottom_toBottomOf="@+id/connect_button"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/eargear_connect_button" />
-
-        <ToggleButton
-            android:id="@+id/eargear_connect_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:textOff="(Re)Connect"
-            android:textOn="DisConnect"
-
-            android:enabled="@{permissionsGranted &amp;&amp; viewModel.bluetoothSupported &amp;&amp; viewModel.bluetoothEnabled}"
-            android:onClick="@{view -> viewModel.toggleEarConnection(context, (BluetoothDevice) earDeviceSpinner.getSelectedItem())}"
-
-            app:layout_constraintEnd_toStartOf="@id/scan_button"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Spinner
-            android:id="@+id/tail_device_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tailgear_connect_button"
-            app:layout_constraintEnd_toStartOf="@+id/tailgear_connect_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/eargear_connect_button" />
-
-        <ToggleButton
-            android:id="@+id/tailgear_connect_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-            android:textOff="(Re)Connect"
-            android:textOn="DisConnect"
-
-            android:enabled="@{permissionsGranted &amp;&amp; viewModel.bluetoothSupported &amp;&amp; viewModel.bluetoothEnabled}"
-            android:onClick="@{view -> viewModel.toggleTailConnection(context, (BluetoothDevice) tailDeviceSpinner.getSelectedItem())}"
-
-            app:layout_constraintEnd_toStartOf="@id/scan_button"
-            app:layout_constraintStart_toStartOf="@id/eargear_connect_button"
-            app:layout_constraintTop_toBottomOf="@id/eargear_connect_button" />
+            app:layout_constraintEnd_toStartOf="@+id/connect_button" />
 
         <ToggleButton
             android:id="@+id/scan_button"
@@ -82,9 +44,40 @@
             android:checked="@{viewModel.isScanning}"
             android:onClick="@{(view) -> viewModel.toggleScanning() }"
 
-            app:layout_constraintBottom_toBottomOf="@id/tailgear_connect_button"
+            app:layout_constraintTop_toTopOf="@+id/connect_button"
+            app:layout_constraintBottom_toBottomOf="@+id/connect_button"
+
+            app:layout_constraintEnd_toStartOf="@id/connect_button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/connect_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="Connect"
+
+            android:enabled="@{permissionsGranted &amp;&amp; viewModel.bluetoothSupported &amp;&amp; viewModel.bluetoothEnabled}"
+            android:onClick="@{view -> viewModel.connect(context, (BluetoothDevice) connectDeviceSpinner.getSelectedItem())}"
+
+            app:layout_constraintTop_toTopOf="parent"
+
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/single_device_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintTop_toBottomOf="@id/connect_device_spinner"
+
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/eargear_connect_button" />
+
+            tools:itemCount="2"
+            tools:listitem="@layout/device_list_entry"  />
+
+
+        
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

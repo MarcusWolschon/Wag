@@ -4,6 +4,7 @@ import android.Manifest
 import android.bluetooth.BluetoothDevice
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -11,6 +12,8 @@ import androidx.lifecycle.observe
 import biz.wolschon.wag.R
 import biz.wolschon.wag.databinding.ActivityMainBinding
 import biz.wolschon.wag.model.DeviceDetailsViewModel
+import biz.wolschon.wag.model.SingleDeviceListAdapter
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 class MainActivity : PermissionCheckingActivity() {
 
@@ -27,24 +30,26 @@ class MainActivity : PermissionCheckingActivity() {
         binding.viewModel = viewModel
         binding.permissionsGranted = permissionsGranted
 
-        binding.earDeviceSpinner.adapter =
-            ArrayAdapter<BluetoothDevice>(this, R.layout.device_list_entry).also { adapter ->
+        val view = binding.root
+
+        // device we can connect to
+        view.connect_device_spinner.adapter =
+            ArrayAdapter<BluetoothDevice>(this, R.layout.device_spinner_entry).also { adapter ->
                 viewModel.devices.observe(this) { list ->
                     adapter.clear()
                     adapter.addAll(list)
                 }
             }
-        binding.tailDeviceSpinner.adapter =
-            ArrayAdapter<BluetoothDevice>(this, R.layout.device_list_entry).also { adapter ->
-                viewModel.devices.observe(this) { list ->
-                    adapter.clear()
-                    adapter.addAll(list)
-                }
-            }
+
+        // device we are connected to
+        with(binding.singleDeviceList) {
+            layoutManager = LinearLayoutManager(context)
+            adapter = SingleDeviceListAdapter(liveList = viewModel.connectedDevices, viewLifecycleOwner = this@MainActivity/*in fragment use: viewLifecycleOwner*/)
+        }
 
         //TODO: add Jetpack Navigation
 
-        setContentView(binding.root)
+        setContentView(view)
 
 
         //ask for permissions to enable buttons
