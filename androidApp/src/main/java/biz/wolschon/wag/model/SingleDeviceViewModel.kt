@@ -4,27 +4,42 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import biz.wolschon.wag.R
 import biz.wolschon.wag.bluetooth.DeviceConnection
 
 /**
  * ViewModel for one of multiple, simultaneous connections to devices. (e.g. EarGear and Tail)
  */
-class SingleDeviceViewModel(context: Context,
-                            device: BluetoothDevice,
-                            private val listener: ConnectionLostListener) { //TODO: call the listener
+class SingleDeviceViewModel(
+    context: Context,
+    device: BluetoothDevice,
+    private val listener: ConnectionLostListener
+) {
     val ready = MutableLiveData<Boolean>()
-    val statusText = MutableLiveData<Int>().also { it.value = R.string.status_initializing }
+    val versionText = MutableLiveData<String>().also { it.value = "" }
+    private val statusTextResource = MutableLiveData<Int>().also { it.value = R.string.status_initializing }
+    val statusText = Transformations.map(statusTextResource) {
+        if (it == 0) {
+            context.getString(R.string.status_initializing)
+        } else {
+            context.getString(it)
+        }
+    }
     val connection = DeviceConnection(
-                context    = context,
-                adapter    = BluetoothAdapter.getDefaultAdapter(),
-                ready      = ready,
-                statusText = statusText,
-                device     = device
-            )
+        context = context,
+        adapter = BluetoothAdapter.getDefaultAdapter(),
+        ready = ready,
+        versionText = versionText,
+        statusText = statusTextResource,
+        device = device,
+        onDisconnect = {
+            listener.onConnectionLost(this)
+        }
+    )
     val address: String = device.address
     val name: String = device.name
-    val displayName: String = "$name ($address)"
+    val displayName = Transformations.map(versionText) { versionText -> if (name.isBlank()) "($address) $versionText" else "$name $versionText" }
     internal fun onDeviceLost() {
         // do any cleanup
     }

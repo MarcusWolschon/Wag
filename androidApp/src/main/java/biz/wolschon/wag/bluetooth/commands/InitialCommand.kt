@@ -11,7 +11,7 @@ import biz.wolschon.wag.R
 import biz.wolschon.wag.bluetooth.DeviceConnection
 
 class InitialCommand(
-    private val statusText: MutableLiveData<Int>,
+    private val versionText: MutableLiveData<String>,
     private val ready: MutableLiveData<Boolean>
 ) : BLECommand() {
 
@@ -34,21 +34,11 @@ class InitialCommand(
         gatt: BluetoothGatt?,
         characteristic: BluetoothGattCharacteristic?
     ) {
-        Log.d(TAG, "onCharacteristicChanged '${characteristic?.getStringValue(0)}'")
+        val version = characteristic?.getStringValue(0)
+        Log.d(TAG, "onCharacteristicChanged '$version'")
+
+        versionText.postValue(version)
         super.onCharacteristicChanged(gatt, characteristic)
-    }
-
-    override fun onCharacteristicRead(
-        gatt: BluetoothGatt,
-        characteristic: BluetoothGattCharacteristic?,
-        commandStatus: Int
-    ) {
-
-        Log.d(TAG, "onCharacteristicRead ${characteristic?.getStringValue(0)}")
-        /*val status = Status.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0)
-        Log.d(TAG, "Status = 0x" + status.toString(16))*/
-        ready.postValue(true)
-        //statusText.postValue(R.string.status_ready)
     }
 
     companion object {

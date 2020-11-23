@@ -18,8 +18,10 @@ import java.util.*
 class DeviceConnection(context: Context,
                        private val adapter: BluetoothAdapter,
                        private val ready: MutableLiveData<Boolean>,
+                       private val versionText: MutableLiveData<String>,
                        private val statusText: MutableLiveData<Int>,
-                       val device: BluetoothDevice) : BluetoothGattCallback() {
+                       val device: BluetoothDevice,
+                       val onDisconnect: () -> Unit) : BluetoothGattCallback() {
 
     internal var bluetoothGatt: BluetoothGatt
     private var workqueue: BLECommandQueue
@@ -81,6 +83,7 @@ class DeviceConnection(context: Context,
                 statusText.postValue(R.string.status_disconnected)
                 gatt.close()
                 ready.postValue(false)
+                onDisconnect.invoke()
             }
         }
     }
@@ -133,7 +136,7 @@ class DeviceConnection(context: Context,
         workqueue.addCommand(SubscribeControlMessagesCommand())
         workqueue.addCommand(
             InitialCommand(
-                statusText,
+                versionText,
                 ready
             )
         )
