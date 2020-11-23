@@ -2,7 +2,6 @@ package biz.wolschon.wag.model
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.content.Context
 import androidx.lifecycle.Observer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LifecycleOwner
@@ -12,7 +11,7 @@ import biz.wolschon.wag.databinding.DeviceListEntryBinding
 
 class SingleDeviceListAdapter(
     liveList: LiveData<List<SingleDeviceViewModel>>,
-    viewLifecycleOwner: LifecycleOwner,
+    private val viewLifecycleOwner: LifecycleOwner,
     /**
      * An initial list can be supplied.
      * It will be superseeded if this dapter is used to Observe
@@ -29,7 +28,7 @@ init {
 
     var sorting: Comparator<SingleDeviceViewModel>? = null
         set(value) {
-            sorting = value
+            field = value
             sorting?.let { values = values.sortedWith(it) }
             notifyDataSetChanged()
         }
@@ -59,6 +58,7 @@ init {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = DeviceListEntryBinding.inflate(inflater, parent, false)
+        binding.lifecycleOwner = viewLifecycleOwner
         return ViewHolder(binding)
     }
 
