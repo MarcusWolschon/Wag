@@ -19,3 +19,6 @@ The official apps can be found at:
 * https://github.com/MasterTailer/CRUMPET
 * https://github.com/MasterTailer/CRUMPET-iOS
 
+# attribution
+
+* [Bluetooth icons](http://materialdesignicons.com/) by [Green Turtwig](https://twitter.com/greenturtwig)

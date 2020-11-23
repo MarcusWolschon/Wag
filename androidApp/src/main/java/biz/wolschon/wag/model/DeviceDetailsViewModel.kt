@@ -14,10 +14,14 @@ import android.content.pm.PackageManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import biz.wolschon.wag.bluetooth.DeviceConnection
 import biz.wolschon.wag.bluetooth.DeviceScanner
 
 
-class DeviceDetailsViewModel(private val app: Application) : AndroidViewModel(app) {
+class DeviceDetailsViewModel(private val app: Application) :
+                    AndroidViewModel(app),
+                    SingleDeviceViewModel.ConnectionLostListener {
 
     private val bluetoothManager by lazy(LazyThreadSafetyMode.NONE) {
         app.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -95,18 +99,32 @@ class DeviceDetailsViewModel(private val app: Application) : AndroidViewModel(ap
     //               CONNECTIONS
     ///////////////////////////////////////////////////////
 
-    val selectedEarDevice = MutableLiveData<BluetoothDevice>()
-    val selectedTailDevice = MutableLiveData<BluetoothDevice>()
-    private fun onDeviceLost(dev: BluetoothDevice) {
-        selectedEarDevice.value?.let { ear ->
-            if (ear.address == dev.address)
-                selectedEarDevice.postValue(null)
-        }
+    private val connectedDevicesInternal = MutableLiveData<MutableList<SingleDeviceViewModel>>()
+    val connectedDevices: LiveData<List<SingleDeviceViewModel>> = Transformations.map(connectedDevicesInternal) { 
+        it as List<SingleDeviceViewModel>
+    }
 
-        selectedTailDevice.value?.let { tail ->
-            if (tail.address == dev.address)
-                selectedTailDevice.postValue(null)
+    private fun onDeviceLost(dev: BluetoothDevice) {
+        val list = connectedDevicesInternal.value ?: return
+        list.forEach{ singleDevice ->
+            if (singleDevice.address == dev.address) {
+                list.remove(singleDevice)
+                connectedDevicesInternal.postValue(list)
+                singleDevice.onDeviceLost()
+            }
         }
+    }
+
+    override fun onConnectionLost(singleDevice: SingleDeviceViewModel) {
+        val list = connectedDevicesInternal.value ?: return
+         list.remove(singleDevice)
+        connectedDevicesInternal.postValue(list)
+    }
+
+    fun connect(context: Context, device: BluetoothDevice) {
+        val list = connectedDevicesInternal.value ?: mutableListOf<SingleDeviceViewModel>()
+        list.add(SingleDeviceViewModel(context, device, this))
+        connectedDevicesInternal.postValue(list)
     }
 
 }

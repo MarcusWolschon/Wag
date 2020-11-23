@@ -15,20 +15,19 @@ import java.util.*
 
 
 @OptIn(ExperimentalUnsignedTypes::class)
-class DeviceConnection(
-    val context: Context,
-    private val adapter: BluetoothAdapter,
-    private val ready: MutableLiveData<Boolean>,
-    private val viewModel: DeviceDetailsViewModel,
-    private val statusText: MutableLiveData<Int>,
-    val device: BluetoothDevice
-) : BluetoothGattCallback() {
+class DeviceConnection(context: Context,
+                       private val adapter: BluetoothAdapter,
+                       private val ready: MutableLiveData<Boolean>,
+                       private val statusText: MutableLiveData<Int>,
+                       val device: BluetoothDevice) : BluetoothGattCallback() {
 
     internal var bluetoothGatt: BluetoothGatt
     private var workqueue: BLECommandQueue
     private var deviceService: BluetoothGattService? = null
     internal lateinit var controlOut: BluetoothGattCharacteristic
     internal lateinit var controlIn: BluetoothGattCharacteristic
+    val address: String
+        get() = device.address
 
 
     init {
@@ -147,26 +146,6 @@ class DeviceConnection(
         status: Int
     ) {
         Log.d(TAG, "onCharacteristicRead()")
-/*        if (BluetoothGatt.GATT_INSUFFICIENT_AUTHENTICATION == status ||
-                BluetoothGatt.GATT_INSUFFICIENT_ENCRYPTION == status) {
-
-    }
-    else if (status == GATT_AUTH_FAIL)
-            {
-                // This can happen because the user ignored the pairing request notification for too long.
-                // Or presumably if they put the wrong PIN in.
-                disconnectGatt();
-                mState = ConnectionState.FAILED;
-                State.notifyChanged();
-            }
-            else if (status == GATT_ERROR)
-            {
-                // I thought this happened if the bond information was wrong, but now I'm not sure.
-                disconnectGatt();
-                mState = ConnectionState.FAILED;
-                State.notifyChanged();
-            }
-    */
         if (status != BluetoothGatt.GATT_SUCCESS) {
             Log.e(TAG, "Characteristic read failed status=" + status)
             workqueue.commandFinished()
@@ -209,8 +188,7 @@ class DeviceConnection(
         if (characteristic.uuid.equals(BLEConstants.UUID_READ_CHARACTERISTIC)) {
             SubscribeControlMessagesCommand.onControlMessageCharacteristicChanged(
                 gatt,
-                characteristic,
-                viewModel
+                characteristic
             )
         }
 
