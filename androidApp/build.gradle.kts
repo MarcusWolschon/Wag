@@ -31,6 +31,8 @@ dependencies {
     // alternately - if using Java8, use the following instead of lifecycle-compiler
     implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
 
+    // must be the same as our gradle version
+    kapt("com.android.databinding:compiler:5.4.1")
 
     // test
     //testImplementation("androidx.arch.core:core-testing:2.1.0")

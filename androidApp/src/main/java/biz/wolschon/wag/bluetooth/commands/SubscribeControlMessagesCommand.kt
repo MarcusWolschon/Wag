@@ -15,10 +15,10 @@ import biz.wolschon.wag.model.*
 
 class SubscribeControlMessagesCommand() : BLECommand() {
     @ExperimentalUnsignedTypes
-    override fun execute(connection: DeviceConnection): Boolean {
+    override fun execute(deviceConnection: DeviceConnection): Boolean {
 
         // tell BLE to expect notifications
-        if (!connection.bluetoothGatt.setCharacteristicNotification(connection.controlIn, true)) {
+        if (!deviceConnection.bluetoothGatt.setCharacteristicNotification(deviceConnection.controlIn, true)) {
             Log.e(TAG, "setCharacteristicNotification failed")
         }
 
@@ -26,12 +26,12 @@ class SubscribeControlMessagesCommand() : BLECommand() {
 //        connection.controlIn.descriptors.forEach { descriptor ->
 //            Log.d(TAG,"descriptor: ${descriptor.uuid}") // only 1 "00002902-0000-1000-8000-00805f9b34fb"
 //        }
-        val descriptor = connection.controlIn.descriptors[0]
+        val descriptor = deviceConnection.controlIn.descriptors[0]
                 .apply {
                     value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
 
                 }
-        return connection.bluetoothGatt.writeDescriptor(descriptor)
+        return deviceConnection.bluetoothGatt.writeDescriptor(descriptor)
     }
 
 
@@ -40,8 +40,7 @@ class SubscribeControlMessagesCommand() : BLECommand() {
         private const val TAG = "SubscribeCtrlMsgCmd"
 
         fun onControlMessageCharacteristicChanged(gatt: BluetoothGatt,
-                                            characteristic: BluetoothGattCharacteristic,
-                                                  viewModel: DeviceDetailsViewModel) {
+                                            characteristic: BluetoothGattCharacteristic) {
               //TODO
 
             Log.d(TAG, "onControlMessageCharacteristicChanged ${characteristic.getStringValue(0)}")

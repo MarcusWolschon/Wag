@@ -14,11 +14,14 @@ import android.content.pm.PackageManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import biz.wolschon.wag.bluetooth.DeviceConnection
 import biz.wolschon.wag.bluetooth.DeviceScanner
 
 
-class DeviceDetailsViewModel(private val app: Application) : AndroidViewModel(app) {
+class DeviceDetailsViewModel(private val app: Application) :
+                    AndroidViewModel(app),
+                    SingleDeviceViewModel.ConnectionLostListener {
 
     private val bluetoothManager by lazy(LazyThreadSafetyMode.NONE) {
         app.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -96,52 +99,32 @@ class DeviceDetailsViewModel(private val app: Application) : AndroidViewModel(ap
     //               CONNECTIONS
     ///////////////////////////////////////////////////////
 
-    val selectedEarDevice = MutableLiveData<DeviceConnection>()
-    val selectedTailDevice = MutableLiveData<DeviceConnection>()
+    private val connectedDevicesInternal = MutableLiveData<MutableList<SingleDeviceViewModel>>()
+    val connectedDevices: LiveData<List<SingleDeviceViewModel>> = Transformations.map(connectedDevicesInternal) { 
+        it as List<SingleDeviceViewModel>
+    }
+
     private fun onDeviceLost(dev: BluetoothDevice) {
-        selectedEarDevice.value?.device?.let { earDevice ->
-            if (earDevice.address == dev.address)
-                selectedEarDevice.postValue(null)
-        }
-
-        selectedTailDevice.value?.device?.let { tailDevice ->
-            if (tailDevice.address == dev.address)
-                selectedTailDevice.postValue(null)
-        }
-    }
-
-    fun toggleEarConnection(context: Context, device: BluetoothDevice) {
-        val current = selectedEarDevice.value
-        if (current == null) {
-            selectedEarDevice.postValue(DeviceConnection(
-                context = context,
-                adapter = BluetoothAdapter.getDefaultAdapter(),
-                MutableLiveData<Boolean>(),
-                this,
-                MutableLiveData<Int>(),
-                device
-            ))
-        } else {
-            current.disconnect()
-            selectedEarDevice.postValue(null)
+        val list = connectedDevicesInternal.value ?: return
+        list.forEach{ singleDevice ->
+            if (singleDevice.address == dev.address) {
+                list.remove(singleDevice)
+                connectedDevicesInternal.postValue(list)
+                singleDevice.onDeviceLost()
+            }
         }
     }
 
-    fun toggleTailConnection(context: Context, device: BluetoothDevice) {
-        val current = selectedTailDevice.value
-        if (current == null) {
-            selectedTailDevice.postValue(DeviceConnection(
-                context = context,
-                adapter = BluetoothAdapter.getDefaultAdapter(),
-                MutableLiveData<Boolean>(),
-                this,
-                MutableLiveData<Int>(),
-                device
-            ))
-        } else {
-            current.disconnect()
-            selectedTailDevice.postValue(null)
-        }
+    override fun onConnectionLost(singleDevice: SingleDeviceViewModel) {
+        val list = connectedDevicesInternal.value ?: return
+         list.remove(singleDevice)
+        connectedDevicesInternal.postValue(list)
+    }
+
+    fun connect(context: Context, device: BluetoothDevice) {
+        val list = connectedDevicesInternal.value ?: mutableListOf<SingleDeviceViewModel>()
+        list.add(SingleDeviceViewModel(context, device, this))
+        connectedDevicesInternal.postValue(list)
     }
 
 }

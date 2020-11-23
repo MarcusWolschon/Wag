@@ -9,6 +9,7 @@
     <string name="status_discovering">Discovering services…</string>
     <string name="status_checking_services">Checking services…</string>
     <string name="status_failed">Failed</string>
+    <string name="status_initializing">Initializing</string>
 
     <string name="message_nodevicefound">no device found</string>
     <string name="postfix_not_paired"> (NOT PAIRED)</string>
