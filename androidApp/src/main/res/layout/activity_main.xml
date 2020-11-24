@@ -85,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:text="L Twist"
+            android:text="@string/cmd_ltwist"
 
             android:enabled="@{viewModel.hasEarGears}"
             android:onClick='@{view -> viewModel.executeCommand(new SimpleEarCommand("LETWIST"))}'
@@ -99,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:text="R Twist"
+            android:text="@string/cmd_rtwist"
 
             android:enabled="@{viewModel.hasEarGears}"
             android:onClick='@{view -> viewModel.executeCommand(new SimpleEarCommand("RITWIST"))}'

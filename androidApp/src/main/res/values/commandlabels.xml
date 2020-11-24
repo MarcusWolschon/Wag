@@ -1,0 +1,5 @@
+
+<resources>
+    <string name="cmd_ltwist">L Twist</string>
+    <string name="cmd_rtwist">R Twist</string>
+</resources>
