@@ -16,6 +16,8 @@ class GetBatteryCommand(
 ) : BLECommand() {
 
     override val expectingResult: Boolean = true
+    override val isTailCommand: Boolean = false
+    override val isEarCommand: Boolean = true
 
     override fun execute(deviceConnection: DeviceConnection): Boolean {
         val characteristic = deviceConnection.controlOut
