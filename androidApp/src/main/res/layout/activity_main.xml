@@ -6,6 +6,7 @@
     <data>
 
         <import type="biz.wolschon.wag.model.DeviceDetailsViewModel" />
+        <import type="biz.wolschon.wag.bluetooth.commands.SimpleCommand" />
         <import type="androidx.lifecycle.LiveData"/>
         <import type="android.bluetooth.BluetoothDevice"/>
 
@@ -78,6 +79,35 @@
 
 
         
+
+    <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/LETWIST_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="L Twist"
+
+            android:enabled="@{viewModel.hasEarGears}"
+            android:onClick='@{view -> viewModel.executeCommand(new SimpleCommand("LETWIST"))}'
+
+            app:layout_constraintTop_toBottomOf="single_device_list"
+
+            app:layout_constraintStart_toStartOf="parent" />
+
+     <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/RITWIST_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="R Twist"
+
+            android:enabled="@{viewModel.hasEarGears}"
+            android:onClick='@{view -> viewModel.executeCommand(new SimpleCommand("RITWIST"))}'
+
+            app:layout_constraintTop_toBottomOf="single_device_list"
+
+            app:layout_constraintEnd_toEndOf="parent" />
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
