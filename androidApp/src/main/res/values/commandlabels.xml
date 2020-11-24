@@ -1,5 +1,9 @@
 
 <resources>
     <string name="cmd_ltwist">L Twist</string>
+    <string name="cmd_bothtwist">Twist</string>
     <string name="cmd_rtwist">R Twist</string>
+    <string name="cmd_ltilt">L Tilt</string>
+    <string name="cmd_bothtilt">Tilt</string>
+    <string name="cmd_rtilt">R Tilt</string>
 </resources>
