@@ -12,7 +12,7 @@ import biz.wolschon.wag.bluetooth.DeviceConnection
 
 class InitialCommand(
     private val versionText: MutableLiveData<String>,
-    private val ready: MutableLiveData<Boolean>
+    private val success: MutableLiveData<Boolean>? = null
 ) : BLECommand() {
 
     override val expectingResult: Boolean = true
