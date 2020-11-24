@@ -140,9 +140,11 @@ class DeviceDetailsViewModel(private val app: Application) :
         return success
     }
 
-    val hasEarGears
-        get() = list.any{ it.isEarGear}
+    val hasEarGears = Transformations.map(connectedDevicesInternal) { list ->
+        list.any{ it.isEarGear}
+    }
 
-    val hasTails
-        get() = list.any{ it.isTail}
+    val hasTails = Transformations.map(connectedDevicesInternal) { list ->
+        list.any{ it.isTail}
+    }
 }
