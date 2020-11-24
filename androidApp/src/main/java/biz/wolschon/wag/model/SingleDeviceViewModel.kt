@@ -18,6 +18,7 @@ class SingleDeviceViewModel(
 ) {
     val ready = MutableLiveData<Boolean>()
     val versionText = MutableLiveData<String>().also { it.value = "" }
+    val batteryText = MutableLiveData<String>().also { it.value = "" }
     private val statusTextResource = MutableLiveData<Int>().also { it.value = R.string.status_initializing }
     val statusText = Transformations.map(statusTextResource) {
         if (it == 0) {
@@ -31,6 +32,7 @@ class SingleDeviceViewModel(
         adapter = BluetoothAdapter.getDefaultAdapter(),
         ready = ready,
         versionText = versionText,
+        batteryText = batteryText,
         statusText = statusTextResource,
         device = device,
         onDisconnect = {
