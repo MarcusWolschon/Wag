@@ -6,7 +6,7 @@
     <data>
 
         <import type="biz.wolschon.wag.model.DeviceDetailsViewModel" />
-        <import type="biz.wolschon.wag.bluetooth.commands.SimpleCommand" />
+        <import type="biz.wolschon.wag.bluetooth.commands.SimpleEarCommand" />
         <import type="androidx.lifecycle.LiveData"/>
         <import type="android.bluetooth.BluetoothDevice"/>
 
@@ -88,7 +88,7 @@
             android:text="L Twist"
 
             android:enabled="@{viewModel.hasEarGears}"
-            android:onClick='@{view -> viewModel.executeCommand(new SimpleCommand("LETWIST"))}'
+            android:onClick='@{view -> viewModel.executeCommand(new SimpleEarCommand("LETWIST"))}'
 
             app:layout_constraintTop_toBottomOf="single_device_list"
 
@@ -102,7 +102,7 @@
             android:text="R Twist"
 
             android:enabled="@{viewModel.hasEarGears}"
-            android:onClick='@{view -> viewModel.executeCommand(new SimpleCommand("RITWIST"))}'
+            android:onClick='@{view -> viewModel.executeCommand(new SimpleEarCommand("RITWIST"))}'
 
             app:layout_constraintTop_toBottomOf="single_device_list"
 
