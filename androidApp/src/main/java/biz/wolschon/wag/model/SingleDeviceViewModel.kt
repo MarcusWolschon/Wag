@@ -53,6 +53,14 @@ class SingleDeviceViewModel(
         return (cmd.isEarCommand && isTail) || (cmd.isTailCommand && isTail));
     }
 
+    fun executeCommand(cmd: BLECommand): Boolean {
+        if (!isCommandCompatible(cmd)) {
+            return false
+        }
+        connection.execute(cmd)
+        return true
+    }
+
     interface ConnectionLostListener {
         fun onConnectionLost(singleDevice: SingleDeviceViewModel)
     }

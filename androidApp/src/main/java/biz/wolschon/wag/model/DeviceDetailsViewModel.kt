@@ -127,4 +127,22 @@ class DeviceDetailsViewModel(private val app: Application) :
         connectedDevicesInternal.postValue(list)
     }
 
+    /**
+     * Execute the given command on all connected devices that are compatible.
+     * @return true if executed on at least 1 device
+     */
+    fun executeCommand(cmd: BLECommand): Boolean {
+        val list = connectedDevicesInternal.value ?: return
+        var success = false
+        list.forEach{ singleDevice ->
+            success = singleDevice.executeCommand(cmd) || success
+        }
+        return success
+    }
+
+    val hasEarGears
+        get() = list.any{ it.isEarGear}
+
+    val hasTails
+        get() = list.any{ it.isTail}
 }
