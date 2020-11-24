@@ -19,7 +19,7 @@ class DeviceConnection(context: Context,
                        private val adapter: BluetoothAdapter,
                        private val ready: MutableLiveData<Boolean>,
                        private val versionText: MutableLiveData<String>,
-                       private val batteryText: MutableLiveData<String>,
+                       private val batteryText: MutableLiveData<String>?,
                        private val statusText: MutableLiveData<Int>,
                        val device: BluetoothDevice,
                        val onDisconnect: () -> Unit) : BluetoothGattCallback() {
@@ -139,8 +139,10 @@ class DeviceConnection(context: Context,
                 versionText,
                 success = ready // if this commands succeeds, we are ready
             )
-            workqueue.addCommand(GetBatteryCommand(batteryText)
         )
+        if (batteryText != null) {
+            workqueue.addCommand(GetBatteryCommand(batteryText))
+        }
     }
 
 

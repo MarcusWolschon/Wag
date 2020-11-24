@@ -32,7 +32,7 @@ class SingleDeviceViewModel(
         adapter = BluetoothAdapter.getDefaultAdapter(),
         ready = ready,
         versionText = versionText,
-        batteryText = batteryText,
+        batteryText = if (isEarGear) batteryText else null,
         statusText = statusTextResource,
         device = device,
         onDisconnect = {

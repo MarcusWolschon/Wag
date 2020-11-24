@@ -18,7 +18,6 @@ class SimpleCommand(
     forTail: Boolean,
     forEarGear: Boolean
 ) : BLECommand() {
-,
 
     override val isTailCommand: Boolean = forTail
     override val isEarCommand: Boolean = forEarGear
