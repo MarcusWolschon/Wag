@@ -41,11 +41,17 @@ class SingleDeviceViewModel(
     )
     val address: String = device.address
     val name: String = device.name
+    val isEarGear: Boolean = device.name.matches("Ear.*")
+    val isTail: Boolean = device.name.matches("Tail.*")    
     val displayName = Transformations.map(versionText) { versionText -> if (name.isBlank()) "($address) $versionText" else "$name $versionText" }
     internal fun onDeviceLost() {
         // do any cleanup
     }
 
+    fun isCommandCompatible(cmd: BLECommand): Boolean {
+        //TODO: test this
+        return (cmd.isEarCommand && isTail) || (cmd.isTailCommand && isTail));
+    }
 
     interface ConnectionLostListener {
         fun onConnectionLost(singleDevice: SingleDeviceViewModel)
