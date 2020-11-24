@@ -13,7 +13,6 @@ import biz.wolschon.wag.R
 import biz.wolschon.wag.databinding.ActivityMainBinding
 import biz.wolschon.wag.model.DeviceDetailsViewModel
 import biz.wolschon.wag.model.SingleDeviceListAdapter
-import kotlinx.android.synthetic.main.activity_main.view.*
 
 class MainActivity : PermissionCheckingActivity() {
 
@@ -30,10 +29,8 @@ class MainActivity : PermissionCheckingActivity() {
         binding.viewModel = viewModel
         binding.permissionsGranted = permissionsGranted
 
-        val view = binding.root
-
         // device we can connect to
-        view.connect_device_spinner.adapter =
+        binding.connectDeviceSpinner.adapter =
             ArrayAdapter<BluetoothDevice>(this, R.layout.device_spinner_entry).also { adapter ->
                 viewModel.devices.observe(this) { list ->
                     adapter.clear()
@@ -49,7 +46,7 @@ class MainActivity : PermissionCheckingActivity() {
 
         //TODO: add Jetpack Navigation
 
-        setContentView(view)
+        setContentView(binding.root)
 
 
         //ask for permissions to enable buttons
