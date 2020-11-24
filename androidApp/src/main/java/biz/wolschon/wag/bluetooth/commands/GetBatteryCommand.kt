@@ -15,7 +15,7 @@ class GetBatteryCommand(
     private val success: MutableLiveData<Boolean>? = null
 ) : BLECommand() {
 
-    override val expectingResult: Boolean = true
+    override var expectingResult: Boolean = true
     override val isTailCommand: Boolean = false
     override val isEarCommand: Boolean = true
 
@@ -24,7 +24,9 @@ class GetBatteryCommand(
             .apply {
                 value = "BATT".toByteArray()
             }
-        return deviceConnection.bluetoothGatt.writeCharacteristic(characteristic)
+        val result =  deviceConnection.bluetoothGatt.writeCharacteristic(characteristic)
+        expectingResult = result
+        return result
     }
 
     override fun onCharacteristicChanged(
@@ -36,6 +38,7 @@ class GetBatteryCommand(
 //TODO: interpret batteryText into a percentage value
         batteryText.postValue(battery)
         success?.postValue(true)
+        expectingResult = false
         super.onCharacteristicChanged(gatt, characteristic)
     }
 

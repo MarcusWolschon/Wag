@@ -1,16 +1,12 @@
 package biz.wolschon.wag.bluetooth
 
 import android.bluetooth.*
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import biz.wolschon.wag.BuildConfig
 import biz.wolschon.wag.R
 import biz.wolschon.wag.bluetooth.commands.*
-import biz.wolschon.wag.model.DeviceDetailsViewModel
 import java.util.*
 
 
@@ -157,8 +153,15 @@ class DeviceConnection(context: Context,
             workqueue.commandFinished()
             return
         }
-        workqueue.currentCommand?.onCharacteristicRead(gatt, characteristic, status)
-        workqueue.commandFinished()
+        val cmd = workqueue.currentCommand
+        if (cmd != null) {
+            cmd.onCharacteristicRead(gatt, characteristic, status)
+            if (!cmd.expectingResult) {
+                workqueue.commandFinished()
+            }
+        } else {
+            workqueue.commandFinished()
+        }
     }
 
     override fun onCharacteristicWrite(
@@ -199,7 +202,15 @@ class DeviceConnection(context: Context,
         }
 //TODO: the device will report  battery-changes regularly on it's own, update batteryText
         // just for completeness sake
-        workqueue.currentCommand?.onCharacteristicChanged(gatt, characteristic)
+        val cmd = workqueue.currentCommand
+        if (cmd != null) {
+            cmd.onCharacteristicChanged(gatt, characteristic)
+            if (!cmd.expectingResult) {
+                workqueue.commandFinished()
+            }
+        } else {
+            workqueue.commandFinished()
+        }
     }
 
     override fun onDescriptorRead(
