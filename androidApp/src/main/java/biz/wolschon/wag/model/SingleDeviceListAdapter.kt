@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.device_list_entry.view.*
 import biz.wolschon.wag.databinding.DeviceListEntryBinding
 
 class SingleDeviceListAdapter(

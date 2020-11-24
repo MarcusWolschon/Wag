@@ -6,6 +6,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import biz.wolschon.wag.R
+import biz.wolschon.wag.bluetooth.BLECommand
 import biz.wolschon.wag.bluetooth.DeviceConnection
 
 /**
@@ -27,6 +28,11 @@ class SingleDeviceViewModel(
             context.getString(it)
         }
     }
+    val address: String = device.address
+    val name: String = device.name
+    val isEarGear: Boolean = device.name == "EarGear"
+    val isTail: Boolean = device.name.matches( Regex("Tail.*"))
+    val displayName = Transformations.map(versionText) { versionText -> if (name.isBlank()) "($address) $versionText" else "$name $versionText" }
     val connection = DeviceConnection(
         context = context,
         adapter = BluetoothAdapter.getDefaultAdapter(),
@@ -39,18 +45,13 @@ class SingleDeviceViewModel(
             listener.onConnectionLost(this)
         }
     )
-    val address: String = device.address
-    val name: String = device.name
-    val isEarGear: Boolean = device.name.matches("Ear.*")
-    val isTail: Boolean = device.name.matches("Tail.*")    
-    val displayName = Transformations.map(versionText) { versionText -> if (name.isBlank()) "($address) $versionText" else "$name $versionText" }
     internal fun onDeviceLost() {
         // do any cleanup
     }
 
     fun isCommandCompatible(cmd: BLECommand): Boolean {
         //TODO: test this
-        return (cmd.isEarCommand && isTail) || (cmd.isTailCommand && isTail));
+        return (cmd.isEarCommand && isEarGear) || (cmd.isTailCommand && isTail)
     }
 
     fun executeCommand(cmd: BLECommand): Boolean {

@@ -10,12 +10,12 @@ import biz.wolschon.wag.bluetooth.BLECommandQueue
 import biz.wolschon.wag.R
 import biz.wolschon.wag.bluetooth.DeviceConnection
 
-class InitialCommand(
+class GetVersionCommand(
     private val versionText: MutableLiveData<String>,
     private val success: MutableLiveData<Boolean>? = null
 ) : BLECommand() {
 
-    override val expectingResult: Boolean = true
+    override var expectingResult: Boolean = true
 
     override fun execute(deviceConnection: DeviceConnection): Boolean {
         /*Log.d(TAG, "Reading Status...")
@@ -27,7 +27,9 @@ class InitialCommand(
                 value = "VER".toByteArray()// ask for firmware version as a test command
                 // result: "VER 1.3.2"
             }
-        return deviceConnection.bluetoothGatt.writeCharacteristic(characteristic)
+        val result =  deviceConnection.bluetoothGatt.writeCharacteristic(characteristic)
+        expectingResult = result
+        return result
     }
 
     override fun onCharacteristicChanged(
@@ -38,10 +40,11 @@ class InitialCommand(
         Log.d(TAG, "onCharacteristicChanged '$version'")
 
         versionText.postValue(version)
+        expectingResult = false
         super.onCharacteristicChanged(gatt, characteristic)
     }
 
     companion object {
-        private const val TAG = "InitialCommand"
+        private const val TAG = "GetVersionCommand"
     }
 }

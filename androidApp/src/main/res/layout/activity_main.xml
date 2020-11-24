@@ -78,14 +78,14 @@
             tools:listitem="@layout/device_list_entry"  />
 
 
-    <android.support.v7.widget.GridLayout
+    <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            app:alignmentMode="alignBounds"
-            app:columnCount="3"
+            android:alignmentMode="alignBounds"
+            android:columnCount="3"
             
-            app:layout_constraintTop_toBottomOf="single_device_list"
+            app:layout_constraintTop_toBottomOf="@id/single_device_list"
             
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -96,21 +96,22 @@
             android:layout_height="wrap_content"
             android:text="@string/cmd_ltwist"
             android:enabled="@{viewModel.hasEarGears}"
-            android:onClick='@{view -> viewModel.executeCommand(new SimpleEarCommand("LETWIST"))}' />
+            android:onClick='@{view -> viewModel.executeSimpleEarCommand("LETWIST")}' />
 
      <androidx.appcompat.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cmd_bothtwist"
             android:enabled="@{viewModel.hasEarGears}"
-            android:onClick='@{view -> viewModel.executeCommand(new SimpleEarCommand("BOTWIST"))}'/>
+            android:onClick='@{view -> viewModel.executeSimpleEarCommand("BOTWIST")}'/>
 
      <androidx.appcompat.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cmd_rtwist"
             android:enabled="@{viewModel.hasEarGears}"
-            android:onClick='@{view -> viewModel.executeCommand(new SimpleEarCommand("RITWIST"))}'/>
+            android:onClick='@{view -> viewModel.executeSimpleEarCommand("RITWIST")}'
+         />
 
 <!-- next row -->
 
@@ -119,23 +120,23 @@
             android:layout_height="wrap_content"
             android:text="@string/cmd_ltilt"
             android:enabled="@{viewModel.hasEarGears}"
-            android:onClick='@{view -> viewModel.executeCommand(new SimpleEarCommand("LETILT"))}' />
+            android:onClick='@{view -> viewModel.executeSimpleEarCommand("LETILT")}' />
 
      <androidx.appcompat.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cmd_bothtiltt"
+            android:text="@string/cmd_bothtilt"
             android:enabled="@{viewModel.hasEarGears}"
-            android:onClick='@{view -> viewModel.executeCommand(new SimpleEarCommand("BOTILT"))}'/>
+            android:onClick='@{view -> viewModel.executeSimpleEarCommand("BOTILT")}'/>
 
      <androidx.appcompat.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cmd_rtilt"
             android:enabled="@{viewModel.hasEarGears}"
-            android:onClick='@{view -> viewModel.executeCommand(new SimpleEarCommand("RITILT"))}'/>
+            android:onClick='@{view -> viewModel.executeSimpleEarCommand("RITILT")}'/>
 
-    </android.support.v7.widget.GridLayout>
+    </GridLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,7 +15,5 @@ import biz.wolschon.wag.bluetooth.DeviceConnection
  * A simple command only for EarGear that expects no answer.
  */
 class SimpleEarCommand(
-    commandString: String,
-    forTail: Boolean,
-    forEarGear: Boolean
+    commandString: String
 ) : SimpleCommand(commandString, forTail = false, forEarGear = true)

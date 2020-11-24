@@ -13,7 +13,7 @@ import biz.wolschon.wag.bluetooth.DeviceConnection
 /**
  * A simple command that expects no answer.
  */
-class SimpleCommand(
+open class SimpleCommand(
     private val commandString: String,
     forTail: Boolean,
     forEarGear: Boolean
@@ -23,12 +23,13 @@ class SimpleCommand(
     override val isEarCommand: Boolean = forEarGear
 
     override fun execute(deviceConnection: DeviceConnection): Boolean {
+        Log.d(TAG, "performing simple command $commandString")
         val characteristic = deviceConnection.controlOut
             .apply { value = commandString.toByteArray() }
         return deviceConnection.bluetoothGatt.writeCharacteristic(characteristic)
     }
 
     companion object {
-        private const val TAG = "SimpleCommand($commandString)"
+        private const val TAG = "SimpleCommand"
     }
 }

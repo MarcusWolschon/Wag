@@ -15,8 +15,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import biz.wolschon.wag.bluetooth.BLECommand
 import biz.wolschon.wag.bluetooth.DeviceConnection
 import biz.wolschon.wag.bluetooth.DeviceScanner
+import biz.wolschon.wag.bluetooth.commands.SimpleEarCommand
 
 
 class DeviceDetailsViewModel(private val app: Application) :
@@ -131,8 +133,14 @@ class DeviceDetailsViewModel(private val app: Application) :
      * Execute the given command on all connected devices that are compatible.
      * @return true if executed on at least 1 device
      */
+    fun executeSimpleEarCommand(cmd: String): Boolean =
+        executeCommand(SimpleEarCommand(cmd))
+    /**
+     * Execute the given command on all connected devices that are compatible.
+     * @return true if executed on at least 1 device
+     */
     fun executeCommand(cmd: BLECommand): Boolean {
-        val list = connectedDevicesInternal.value ?: return
+        val list = connectedDevicesInternal.value ?: return false
         var success = false
         list.forEach{ singleDevice ->
             success = singleDevice.executeCommand(cmd) || success
