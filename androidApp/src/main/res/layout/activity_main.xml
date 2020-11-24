@@ -38,8 +38,8 @@
             android:id="@+id/scan_button"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:textOff="Scan"
-            android:textOn="Stop"
+            android:textOff="@string/action_scan_on"
+            android:textOn="@string/action_scan_off"
 
             android:enabled="@{permissionsGranted &amp;&amp; viewModel.bluetoothSupported &amp;&amp; viewModel.bluetoothEnabled}"
             android:checked="@{viewModel.isScanning}"
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:text="Connect"
+            android:text="@string/action_connect"
 
             android:enabled="@{permissionsGranted &amp;&amp; viewModel.bluetoothSupported &amp;&amp; viewModel.bluetoothEnabled}"
             android:onClick="@{view -> viewModel.connect(context, (BluetoothDevice) connectDeviceSpinner.getSelectedItem())}"

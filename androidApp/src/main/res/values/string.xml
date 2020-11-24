@@ -11,6 +11,12 @@
     <string name="status_failed">Failed</string>
     <string name="status_initializing">Initializing</string>
 
+    <string name="action_scan_on">Scan</string>
+    <string name="action_scan_off">Stop</string>
+    <string name="action_connect">Connect</string>
+    <string name="action_disconnect">Disconnect</string>
+
+
     <string name="message_nodevicefound">no device found</string>
     <string name="postfix_not_paired"> (NOT PAIRED)</string>
 
