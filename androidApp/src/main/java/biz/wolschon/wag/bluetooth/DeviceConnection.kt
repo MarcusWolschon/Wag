@@ -19,6 +19,7 @@ class DeviceConnection(context: Context,
                        private val adapter: BluetoothAdapter,
                        private val ready: MutableLiveData<Boolean>,
                        private val versionText: MutableLiveData<String>,
+                       private val batteryText: MutableLiveData<String>,
                        private val statusText: MutableLiveData<Int>,
                        val device: BluetoothDevice,
                        val onDisconnect: () -> Unit) : BluetoothGattCallback() {
@@ -134,11 +135,11 @@ class DeviceConnection(context: Context,
     private fun doInitialCommand() {
         Log.d(TAG, "initial commands")
         workqueue.addCommand(SubscribeControlMessagesCommand())
-        workqueue.addCommand(
-            InitialCommand(
+        workqueue.addCommand(GetVersionCommand(
                 versionText,
-                ready
+                success = ready // if this commands succeeds, we are ready
             )
+            workqueue.addCommand(GetBatteryCommand(batteryText)
         )
     }
 
@@ -194,7 +195,7 @@ class DeviceConnection(context: Context,
                 characteristic
             )
         }
-
+//TODO: the device will report  battery-changes regularly on it's own, update batteryText
         // just for completeness sake
         workqueue.currentCommand?.onCharacteristicChanged(gatt, characteristic)
     }
