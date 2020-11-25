@@ -4,7 +4,17 @@ This is an independent, 3rd party Android app to remote control "EarGear" and "D
 
 # Project status
 
-**pre Alpha** - working on a Minimum Viable Product (MVP)
+**Alpha** - generally working with very limited functionality and preliminary UI
+
+Tasks needed for a release 1.0 and reach Beta status:
+
+* Bluetooth connecting and disconnecting working
+* firmware version command working
+* ear commands working
+* TODO: connect BATT command to UI (icons for battery levels already present)
+* TODO: tail commands
+* TODO: finalize UI
+* TODO: app icon and Play Store graphics
 
 # Protocol
 
