@@ -27,3 +27,12 @@ jobs:
 
     - name: Build with Gradle
       run: ./gradlew --no-daemon --stacktrace build
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: artifacts
+        path: |
+          ./*/build/outputs/apk/
+          ./*/build/outputs/aar/
+          ./*/build/test-results/**/TEST-*.xml
+          ./androidApp/build/reports/lint-results.xml
