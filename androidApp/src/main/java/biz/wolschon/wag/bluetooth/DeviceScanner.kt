@@ -1,4 +1,3 @@
-
 package biz.wolschon.wag.bluetooth
 
 import androidx.lifecycle.MutableLiveData
@@ -16,10 +15,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class DeviceScanner(
-        private val mBluetoothAdapter: BluetoothAdapter,
-        private val devices: MutableLiveData<List<BluetoothDevice>>,
-        private val onDeviceLost: (BluetoothDevice) -> Unit,
-                    private val isScanning: MutableLiveData<Boolean>) {
+    private val mBluetoothAdapter: BluetoothAdapter,
+    private val devices: MutableLiveData<List<BluetoothDevice>>,
+    private val onDeviceLost: (BluetoothDevice) -> Unit,
+    private val isScanning: MutableLiveData<Boolean>
+) {
 
     fun stop() {
         Log.i(TAG, "stop()")
@@ -68,7 +68,7 @@ class DeviceScanner(
 
 
         private fun contains(mDevices: MutableList<BluetoothDevice>, result: BluetoothDevice) =
-                mDevices.find { it.address == result.address } != null
+            mDevices.find { it.address == result.address } != null
     }
 
     private val scanCallback by lazy { Callback(this) }
@@ -78,17 +78,17 @@ class DeviceScanner(
 
         // only compatible devices
         val filter1 = ScanFilter.Builder()
-                .setServiceUuid(ParcelUuid.fromString(BLEConstants.UUID_SERVICE))
-                .build()
+            .setServiceUuid(ParcelUuid.fromString(BLEConstants.UUID_SERVICE))
+            .build()
         val builder = ScanSettings.Builder()
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+            .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
 //    invalid callback type - 5             .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES + ScanSettings.CALLBACK_TYPE_MATCH_LOST)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder.setLegacy(false)
         }
         val settings = builder
-                .build()
+            .build()
 
         isScanning.postValue(true)
         val callback = scanCallback
@@ -106,9 +106,11 @@ class DeviceScanner(
 
 
         mBluetoothAdapter.bluetoothLeScanner?.flushPendingScanResults(callback)
-        mBluetoothAdapter.bluetoothLeScanner?.startScan(MutableList<ScanFilter>(1) {filter1},
-                settings,
-                callback)
+        mBluetoothAdapter.bluetoothLeScanner?.startScan(
+            MutableList<ScanFilter>(1) { filter1 },
+            settings,
+            callback
+        )
 
     }
 

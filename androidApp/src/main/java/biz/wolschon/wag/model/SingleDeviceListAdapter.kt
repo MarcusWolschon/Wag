@@ -19,10 +19,10 @@ class SingleDeviceListAdapter(
     private var values: List<SingleDeviceViewModel> = ArrayList()
 ) :
     RecyclerView.Adapter<SingleDeviceListAdapter.ViewHolder>(),
-     Observer<List<SingleDeviceViewModel>> {
+    Observer<List<SingleDeviceViewModel>> {
 
-init {
-            liveList.observe(viewLifecycleOwner, this)
+    init {
+        liveList.observe(viewLifecycleOwner, this)
     }
 
     var sorting: Comparator<SingleDeviceViewModel>? = null
@@ -54,7 +54,7 @@ init {
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = DeviceListEntryBinding.inflate(inflater, parent, false)
         binding.lifecycleOwner = viewLifecycleOwner
@@ -66,8 +66,9 @@ init {
     }
 
     inner class ViewHolder(
-            val binding: DeviceListEntryBinding) :
-            RecyclerView.ViewHolder(binding.root) {
+        val binding: DeviceListEntryBinding
+    ) :
+        RecyclerView.ViewHolder(binding.root) {
 
         private var singleDevice: SingleDeviceViewModel? = null
 

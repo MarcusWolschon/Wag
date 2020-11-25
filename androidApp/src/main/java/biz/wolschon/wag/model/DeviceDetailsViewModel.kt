@@ -22,8 +22,8 @@ import biz.wolschon.wag.bluetooth.commands.SimpleEarCommand
 
 
 class DeviceDetailsViewModel(private val app: Application) :
-                    AndroidViewModel(app),
-                    SingleDeviceViewModel.ConnectionLostListener {
+    AndroidViewModel(app),
+    SingleDeviceViewModel.ConnectionLostListener {
 
     private val bluetoothManager by lazy(LazyThreadSafetyMode.NONE) {
         app.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -31,7 +31,6 @@ class DeviceDetailsViewModel(private val app: Application) :
 
     val isBluetoothSupported
         get() = app.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)
-
 
 
     val bluetoothEnabled by lazy {
@@ -67,9 +66,9 @@ class DeviceDetailsViewModel(private val app: Application) :
     ///////////////////////////////////////////////////////
 
     private val devicesInternal = MutableLiveData<List<BluetoothDevice>>()
-    val devices : LiveData<List<BluetoothDevice>> = devicesInternal
+    val devices: LiveData<List<BluetoothDevice>> = devicesInternal
     private val isScanningInternal = MutableLiveData<Boolean>()
-    val isScanning : LiveData<Boolean> = isScanningInternal
+    val isScanning: LiveData<Boolean> = isScanningInternal
     private val scanner by lazy {
         DeviceScanner(
             bluetoothManager.adapter,
@@ -102,13 +101,14 @@ class DeviceDetailsViewModel(private val app: Application) :
     ///////////////////////////////////////////////////////
 
     private val connectedDevicesInternal = MutableLiveData<MutableList<SingleDeviceViewModel>>()
-    val connectedDevices: LiveData<List<SingleDeviceViewModel>> = Transformations.map(connectedDevicesInternal) { 
-        it as List<SingleDeviceViewModel>
-    }
+    val connectedDevices: LiveData<List<SingleDeviceViewModel>> =
+        Transformations.map(connectedDevicesInternal) {
+            it as List<SingleDeviceViewModel>
+        }
 
     private fun onDeviceLost(dev: BluetoothDevice) {
         val list = connectedDevicesInternal.value ?: return
-        list.forEach{ singleDevice ->
+        list.forEach { singleDevice ->
             if (singleDevice.address == dev.address) {
                 list.remove(singleDevice)
                 connectedDevicesInternal.postValue(list)
@@ -119,7 +119,7 @@ class DeviceDetailsViewModel(private val app: Application) :
 
     override fun onConnectionLost(singleDevice: SingleDeviceViewModel) {
         val list = connectedDevicesInternal.value ?: return
-         list.remove(singleDevice)
+        list.remove(singleDevice)
         connectedDevicesInternal.postValue(list)
     }
 
@@ -135,6 +135,7 @@ class DeviceDetailsViewModel(private val app: Application) :
      */
     fun executeSimpleEarCommand(cmd: String): Boolean =
         executeCommand(SimpleEarCommand(cmd))
+
     /**
      * Execute the given command on all connected devices that are compatible.
      * @return true if executed on at least 1 device
@@ -142,17 +143,17 @@ class DeviceDetailsViewModel(private val app: Application) :
     fun executeCommand(cmd: BLECommand): Boolean {
         val list = connectedDevicesInternal.value ?: return false
         var success = false
-        list.forEach{ singleDevice ->
+        list.forEach { singleDevice ->
             success = singleDevice.executeCommand(cmd) || success
         }
         return success
     }
 
     val hasEarGears = Transformations.map(connectedDevicesInternal) { list ->
-        list.any{ it.isEarGear}
+        list.any { it.isEarGear }
     }
 
     val hasTails = Transformations.map(connectedDevicesInternal) { list ->
-        list.any{ it.isTail}
+        list.any { it.isTail }
     }
 }
