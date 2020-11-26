@@ -30,9 +30,15 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: artifacts
+        name: app
         path: |
-          ./*/build/outputs/apk/*.apk
+          ./*/build/outputs/apk/*/*.apk
+          ./*/build/outputs/bundle/*/*.aab
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: shared library
+        path: |
           ./*/build/outputs/aar/*.aar
 
     - uses: actions/upload-artifact@v2
