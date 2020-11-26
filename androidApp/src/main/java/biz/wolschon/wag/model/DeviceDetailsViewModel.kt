@@ -19,6 +19,7 @@ import biz.wolschon.wag.bluetooth.BLECommand
 import biz.wolschon.wag.bluetooth.DeviceConnection
 import biz.wolschon.wag.bluetooth.DeviceScanner
 import biz.wolschon.wag.bluetooth.commands.SimpleEarCommand
+import biz.wolschon.wag.bluetooth.commands.SimpleTailCommand
 
 
 class DeviceDetailsViewModel(private val app: Application) :
@@ -135,6 +136,13 @@ class DeviceDetailsViewModel(private val app: Application) :
      */
     fun executeSimpleEarCommand(cmd: String): Boolean =
         executeCommand(SimpleEarCommand(cmd))
+
+    /**
+     * Execute the given command on all connected devices that are compatible.
+     * @return true if executed on at least 1 device
+     */
+    fun executeSimpleTailCommand(cmd: String): Boolean =
+        executeCommand(SimpleTailCommand(cmd))
 
     /**
      * Execute the given command on all connected devices that are compatible.
