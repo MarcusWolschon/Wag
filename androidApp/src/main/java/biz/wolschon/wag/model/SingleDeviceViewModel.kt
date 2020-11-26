@@ -20,6 +20,13 @@ class SingleDeviceViewModel(
     val ready = MutableLiveData<Boolean>()
     val versionText = MutableLiveData<String>().also { it.value = "" }
     val batteryText = MutableLiveData<String>().also { it.value = "" }
+    val batteryIcon = Transformations.map(batteryText) { text ->
+           //TODO: Issue #4 - show battery indicator
+           // ic_bluetooth_battery_10
+           // ..
+           // ic_bluetooth_battery_100
+            R.drawable.ic_bluetooth_battery_unknown
+     }
     private val statusTextResource =
         MutableLiveData<Int>().also { it.value = R.string.status_initializing }
     val statusText = Transformations.map(statusTextResource) {
@@ -32,7 +39,7 @@ class SingleDeviceViewModel(
     val address: String = device.address
     val name: String = device.name
     val isEarGear: Boolean = device.name == "EarGear"
-    val isTail: Boolean = device.name.matches(Regex("Tail.*"))
+    val isDigitail: Boolean = device.name.matches(Regex("Tail.*"))
     val displayName =
         Transformations.map(versionText) { versionText -> if (name.isBlank()) "($address) $versionText" else "$name $versionText" }
     val connection = DeviceConnection(
@@ -54,7 +61,7 @@ class SingleDeviceViewModel(
 
     fun isCommandCompatible(cmd: BLECommand): Boolean {
         //TODO: test this
-        return (cmd.isEarCommand && isEarGear) || (cmd.isTailCommand && isTail)
+        return (cmd.isEarCommand && isEarGear) || (cmd.isTailCommand && isDigitail)
     }
 
     fun executeCommand(cmd: BLECommand): Boolean {

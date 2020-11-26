@@ -27,7 +27,7 @@
             android:textColor="@{singleDevice.ready ? @android:color/black : @android:color/darker_gray}"
             tools:text="AA:BB:CC:DD:EE:FF:GG"
 
-            app:drawableStartCompat="@drawable/ic_bluetooth_battery_unknown"
+            app:drawableStartCompat="@{viewModel.batteryIcon}"
             android:drawablePadding="8dp"
 
             app:layout_constraintTop_toTopOf="@id/device_disconnect"
