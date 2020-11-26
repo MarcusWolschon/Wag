@@ -45,7 +45,7 @@ class SingleDeviceViewModel(
     /**
      * Source: https://github.com/MasterTailer/CRUMPET/blob/master/src/BTDeviceModel.cpp#L206
      */
-    val isDigitail: Boolean = device.name.matches(Regex(".*Tail.*"))
+    val isDigitail: Boolean = device.name == "(!)Tail1"
     val displayName =
         Transformations.map(versionText) { versionText -> if (name.isBlank()) "($address) $versionText" else "$name $versionText" }
     val connection = DeviceConnection(
