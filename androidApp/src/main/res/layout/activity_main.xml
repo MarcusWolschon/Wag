@@ -19,7 +19,10 @@
             name="permissionsGranted"
             type="LiveData&lt;Boolean&gt;" />
     </data>
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".androidApp.MainActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_view"
         android:layout_width="match_parent"
@@ -224,4 +227,5 @@
             android:enabled="@{viewModel.hasDigitails}"
             android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILHA")}'
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>
