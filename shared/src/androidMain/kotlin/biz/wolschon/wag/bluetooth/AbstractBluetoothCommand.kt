@@ -10,7 +10,7 @@ import biz.wolschon.wag.bluetooth.BLECommandQueue
 import biz.wolschon.wag.R
 import biz.wolschon.wag.bluetooth.DeviceConnection
 
-abstract class AbstractBluetoothCommand() : BLECommand() {
+actual abstract class AbstractBluetoothCommand() : BLECommand() {
 
     fun sendCommand(cmd: String): Boolean {
         val characteristic = deviceConnection.controlOut
@@ -22,7 +22,8 @@ abstract class AbstractBluetoothCommand() : BLECommand() {
         return result
     }
 
-    abstract fun onResultReceived(result: String)
+    open fun onResultReceived(result: String) {
+    }
 
     override fun onCharacteristicChanged(
         gatt: BluetoothGatt?,
