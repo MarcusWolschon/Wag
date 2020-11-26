@@ -161,7 +161,7 @@ class DeviceDetailsViewModel(private val app: Application) :
         list.any { it.isEarGear }
     }
 
-    val hasTails = Transformations.map(connectedDevicesInternal) { list ->
+    val hasDigitails = Transformations.map(connectedDevicesInternal) { list ->
         list.any { it.isTail }
     }
 }

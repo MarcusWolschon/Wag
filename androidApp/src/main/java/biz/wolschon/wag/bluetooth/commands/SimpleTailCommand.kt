@@ -14,6 +14,6 @@ import biz.wolschon.wag.bluetooth.DeviceConnection
 /**
  * A simple command only for Digitail that expects no answer.
  */
-class SimpleEarCommand(
+class SimpleTailCommand(
     commandString: String
 ) : SimpleCommand(commandString, forTail = true, forEarGear = false)

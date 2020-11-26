@@ -7,6 +7,7 @@
 
         <import type="biz.wolschon.wag.model.DeviceDetailsViewModel" />
         <import type="biz.wolschon.wag.bluetooth.commands.SimpleEarCommand" />
+        <import type="biz.wolschon.wag.bluetooth.commands.SimpleTailCommand" />
         <import type="androidx.lifecycle.LiveData"/>
         <import type="android.bluetooth.BluetoothDevice"/>
 
@@ -79,6 +80,7 @@
 
 
     <GridLayout
+            android:id="@+id/ear_commands"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -139,5 +141,87 @@
     </GridLayout>
 
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <GridLayout
+            android:id="@+id/tail_commands"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:alignmentMode="alignBounds"
+            android:columnCount="3"
+            
+            app:layout_constraintTop_toBottomOf="@id/ear_commands"
+            
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+<androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cmd_tail1"
+            android:enabled="@{viewModel.hasDigitails}"
+            android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILS1")}' />
+
+     <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cmd_tailhm"
+            android:enabled="@{viewModel.hasDigitails}"
+            android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILHM")}'/>
+
+     <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cmd_tailfa"
+            android:enabled="@{viewModel.hasDigitails}"
+            android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILFA")}'
+         />
+
+<!-- next row -->
+
+<androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cmd_tail2"
+            android:enabled="@{viewModel.hasDigitails}"
+            android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILS2")}' />
+
+     <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cmd_tailer"
+            android:enabled="@{viewModel.hasDigitails}"
+            android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILER")}'/>
+
+     <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cmd_tailsh"
+            android:enabled="@{viewModel.hasDigitails}"
+            android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILHA")}'
+         />
+
+<!-- next row -->
+
+<androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cmd_tail3"
+            android:enabled="@{viewModel.hasDigitails}"
+            android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILS3")}' />
+
+     <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cmd_tailet"
+            android:enabled="@{viewModel.hasDigitails}"
+            android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILET")}'/>
+
+     <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cmd_tailha"
+            android:enabled="@{viewModel.hasDigitails}"
+            android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILHA")}'
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
