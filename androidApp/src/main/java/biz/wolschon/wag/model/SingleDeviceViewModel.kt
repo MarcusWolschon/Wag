@@ -38,8 +38,14 @@ class SingleDeviceViewModel(
     }
     val address: String = device.address
     val name: String = device.name
+    /**
+     * Source: https://github.com/MasterTailer/CRUMPET/blob/master/src/BTDeviceModel.cpp#L206
+     */
     val isEarGear: Boolean = device.name == "EarGear"
-    val isDigitail: Boolean = device.name.matches(Regex("Tail.*"))
+    /**
+     * Source: https://github.com/MasterTailer/CRUMPET/blob/master/src/BTDeviceModel.cpp#L206
+     */
+    val isDigitail: Boolean = device.name.matches(Regex(".*Tail.*"))
     val displayName =
         Transformations.map(versionText) { versionText -> if (name.isBlank()) "($address) $versionText" else "$name $versionText" }
     val connection = DeviceConnection(
