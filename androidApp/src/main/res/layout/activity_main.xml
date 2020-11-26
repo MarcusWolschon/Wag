@@ -225,7 +225,7 @@
             android:layout_height="wrap_content"
             android:text="@string/cmd_tailha"
             android:enabled="@{viewModel.hasDigitails}"
-            android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILHA")}'
+            android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILHA")}'/>
     </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>
