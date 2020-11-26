@@ -3,6 +3,7 @@ package biz.wolschon.wag.model
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Context
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import biz.wolschon.wag.R
@@ -25,7 +26,7 @@ class SingleDeviceViewModel(
            // ic_bluetooth_battery_10
            // ..
            // ic_bluetooth_battery_100
-            R.drawable.ic_bluetooth_battery_unknown
+            ResourcesCompat.getDrawable(context.resources, R.drawable.ic_bluetooth_battery_unknown, context.theme)
      }
     private val statusTextResource =
         MutableLiveData<Int>().also { it.value = R.string.status_initializing }

@@ -16,7 +16,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import biz.wolschon.wag.bluetooth.BLECommand
-import biz.wolschon.wag.bluetooth.DeviceConnection
 import biz.wolschon.wag.bluetooth.DeviceScanner
 import biz.wolschon.wag.bluetooth.commands.SimpleEarCommand
 import biz.wolschon.wag.bluetooth.commands.SimpleTailCommand
@@ -162,6 +161,6 @@ class DeviceDetailsViewModel(private val app: Application) :
     }
 
     val hasDigitails = Transformations.map(connectedDevicesInternal) { list ->
-        list.any { it.isTail }
+        list.any { it.isDigitail }
     }
 }
