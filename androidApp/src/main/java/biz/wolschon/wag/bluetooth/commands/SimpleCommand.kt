@@ -19,7 +19,11 @@ open class SimpleCommand(
     override fun execute(deviceConnection: DeviceConnection): Boolean {
         Log.d(TAG, "performing simple command $commandString")
         val characteristic = deviceConnection.controlOut
-            .apply { value = commandString.toByteArray() }
+        if (characteristic == null) {
+            Log.e(TAG, "Can't execute SimpleCommand($commandString) because the controlOut characteristic is null")
+            return false
+        }
+        characteristic.value = commandString.toByteArray()
         return deviceConnection.bluetoothGatt.writeCharacteristic(characteristic)
     }
 

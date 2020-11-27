@@ -12,10 +12,9 @@ import java.util.*
 
 class DeviceConnection(
     context: Context,
-    private val adapter: BluetoothAdapter,
     private val ready: MutableLiveData<Boolean>,
     private val versionText: MutableLiveData<String>,
-    private val batteryText: MutableLiveData<String>?,
+    private val batteryPercentage: MutableLiveData<Int?>?,
     private val statusText: MutableLiveData<Int>,
     val device: BluetoothDevice,
     val onDisconnect: () -> Unit
@@ -24,10 +23,8 @@ class DeviceConnection(
     internal var bluetoothGatt: BluetoothGatt
     private var workqueue: BLECommandQueue
     private var deviceService: BluetoothGattService? = null
-    internal lateinit var controlOut: BluetoothGattCharacteristic
-    internal lateinit var controlIn: BluetoothGattCharacteristic
-    val address: String
-        get() = device.address
+    internal var controlOut: BluetoothGattCharacteristic? = null
+    internal var controlIn: BluetoothGattCharacteristic? = null
 
 
     init {
@@ -38,6 +35,7 @@ class DeviceConnection(
     }
 
 
+    @Suppress("unused")
     fun reconnect() {
         Log.i(TAG, "reconnecting...")
         statusText.postValue(R.string.status_reconnecting)
@@ -96,7 +94,7 @@ class DeviceConnection(
             return
         }
         statusText.postValue(R.string.status_checking_services)
-        val service = gatt.getService(UUID.fromString(BLEConstants.UUID_SERVICE))
+        val service = gatt.getService(UUID.fromString(BLEConstants.getServiceUUID(device.name)))
         if (service == null) {
             Log.e(TAG, "Device Service missing")
             statusText.postValue(R.string.status_failed)
@@ -106,22 +104,26 @@ class DeviceConnection(
         deviceService = service
 
         var characteristic =
-            service.getCharacteristic(UUID.fromString(BLEConstants.UUID_READ_CHARACTERISTIC))
+            service.getCharacteristic(UUID.fromString(BLEConstants.getReadCharacteristicUUID(device.name)))
         if (characteristic == null) {
             Log.e(TAG, "Service is missing READ characteristic")
             statusText.postValue(R.string.status_failed)
             ready.postValue(false)
             return
+        } else {
+            Log.d(TAG, "Service has READ characteristic")
         }
         controlIn = characteristic
 
         characteristic =
-            service.getCharacteristic(UUID.fromString(BLEConstants.UUID_WRITE_CHARACTERISTIC))
+            service.getCharacteristic(UUID.fromString(BLEConstants.getWriteCharacteristicUUID(device.name)))
         if (characteristic == null) {
             Log.e(TAG, "Service is missing WRITE characteristic")
             statusText.postValue(R.string.status_failed)
             ready.postValue(false)
             return
+        } else {
+            Log.d(TAG, "Service has WRITE characteristic")
         }
         controlOut = characteristic
 
@@ -135,11 +137,15 @@ class DeviceConnection(
         workqueue.addCommand(
             GetVersionCommand(
                 versionText,
-                success = ready // if this commands succeeds, we are ready
+                onSuccess = {
+                    // if this commands succeeds, we are ready
+                    ready.postValue(true)
+                    statusText.postValue(R.string.status_ready)
+                }
             )
         )
-        if (batteryText != null) {
-            workqueue.addCommand(GetBatteryCommand(batteryText))
+        if (batteryPercentage != null) {
+            workqueue.addCommand(GetBatteryCommand(batteryPercentage))
         }
     }
 
@@ -196,7 +202,7 @@ class DeviceConnection(
             Log.d(TAG, "onCharacteristicChanged()")
         }
 
-        if (characteristic.uuid.equals(BLEConstants.UUID_READ_CHARACTERISTIC)) {
+        if (characteristic.uuid.equals(BLEConstants.getReadCharacteristicUUID(device.name))) {
             SubscribeControlMessagesCommand.onControlMessageCharacteristicChanged(
                 gatt,
                 characteristic
