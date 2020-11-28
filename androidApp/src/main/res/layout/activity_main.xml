@@ -6,14 +6,10 @@
     <data>
 
         <import type="biz.wolschon.wag.model.DeviceDetailsViewModel" />
-
         <import type="biz.wolschon.wag.bluetooth.commands.SimpleEarCommand" />
-
         <import type="biz.wolschon.wag.bluetooth.commands.SimpleTailCommand" />
-
-        <import type="androidx.lifecycle.LiveData" />
-
-        <import type="android.bluetooth.BluetoothDevice" />
+        <import type="androidx.lifecycle.LiveData"/>
+        <import type="android.bluetooth.BluetoothDevice"/>
 
         <variable
             name="viewModel"

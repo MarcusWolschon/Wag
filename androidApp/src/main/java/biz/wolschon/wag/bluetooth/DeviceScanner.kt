@@ -22,6 +22,7 @@ class DeviceScanner(
 ) {
 
     fun stop() {
+        Log.i(TAG, "stop()")
         mBluetoothAdapter.bluetoothLeScanner.stopScan(scanCallback)
         isScanning.postValue(false)
     }
