@@ -25,7 +25,15 @@ class SubscribeControlMessagesCommand() : BLECommand() {
 //        connection.controlIn.descriptors.forEach { descriptor ->
 //            Log.d(TAG,"descriptor: ${descriptor.uuid}") // only 1 "00002902-0000-1000-8000-00805f9b34fb"
 //        }
-        val descriptor = deviceConnection.controlIn.descriptors[0]
+        val cIn = deviceConnection.controlIn
+        if (cIn == null) {
+            Log.e(
+                TAG,
+                "Can't execute SubscribeControlMessagesCommand because the controlIn characteristic is null"
+            )
+            return false
+        }
+        val descriptor = cIn.descriptors[0]
             .apply {
                 value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
 

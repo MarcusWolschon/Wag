@@ -1,13 +1,7 @@
 package biz.wolschon.wag.bluetooth.commands
 
-import androidx.lifecycle.MutableLiveData
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.BluetoothGattDescriptor
 import android.util.Log
 import biz.wolschon.wag.bluetooth.BLECommand
-import biz.wolschon.wag.bluetooth.BLECommandQueue
-import biz.wolschon.wag.R
 import biz.wolschon.wag.bluetooth.DeviceConnection
 
 /**
@@ -25,7 +19,11 @@ open class SimpleCommand(
     override fun execute(deviceConnection: DeviceConnection): Boolean {
         Log.d(TAG, "performing simple command $commandString")
         val characteristic = deviceConnection.controlOut
-            .apply { value = commandString.toByteArray() }
+        if (characteristic == null) {
+            Log.e(TAG, "Can't execute SimpleCommand($commandString) because the controlOut characteristic is null")
+            return false
+        }
+        characteristic.value = commandString.toByteArray()
         return deviceConnection.bluetoothGatt.writeCharacteristic(characteristic)
     }
 

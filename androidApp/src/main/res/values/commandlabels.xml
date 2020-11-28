@@ -6,4 +6,16 @@
     <string name="cmd_ltilt">L Tilt</string>
     <string name="cmd_bothtilt">Tilt</string>
     <string name="cmd_rtilt">R Tilt</string>
+
+    <string name="cmd_tail1">slow wag 1</string>
+    <string name="cmd_tailhm">hold tail</string>
+    <string name="cmd_tailfa">fast wag</string>
+
+    <string name="cmd_tail2">slow wag 2</string>
+    <string name="cmd_tailer">erect</string>
+    <string name="cmd_tailsh">short wag</string>
+
+    <string name="cmd_tail3">slow wag 3</string>
+    <string name="cmd_tailet">tremble</string>
+    <string name="cmd_tailha">happy wag</string>
 </resources>

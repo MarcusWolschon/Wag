@@ -20,6 +20,7 @@ build:
     when: always
     paths:
       - ./*/build/outputs/apk
+      - ./*/build/outputs/bundle
       - ./*/build/outputs/aar
     reports:
       junit: ./*/build/test-results/**/TEST-*.xml

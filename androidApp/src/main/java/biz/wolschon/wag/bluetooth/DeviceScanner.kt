@@ -73,12 +73,16 @@ class DeviceScanner(
     private val scanCallback by lazy { Callback(this) }
 
     fun scan() {
-        Log.i(TAG, "starting scan for device with service ${BLEConstants.UUID_SERVICE}...")
+        Log.i(TAG, "starting scan for device with service ${BLEConstants.UUID_SERVICE_EARGEAR}...")
 
         // only compatible devices
-        val filter1 = ScanFilter.Builder()
-            .setServiceUuid(ParcelUuid.fromString(BLEConstants.UUID_SERVICE))
+        val filterEarGear = ScanFilter.Builder()
+            .setServiceUuid(ParcelUuid.fromString(BLEConstants.UUID_SERVICE_EARGEAR))
             .build()
+        val filterDigiTail = ScanFilter.Builder()
+            .setServiceUuid(ParcelUuid.fromString(BLEConstants.UUID_SERVICE_DIGITAIL))
+            .build()
+
         val builder = ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
 //    invalid callback type - 5             .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES + ScanSettings.CALLBACK_TYPE_MATCH_LOST)
@@ -106,7 +110,7 @@ class DeviceScanner(
 
         mBluetoothAdapter.bluetoothLeScanner?.flushPendingScanResults(callback)
         mBluetoothAdapter.bluetoothLeScanner?.startScan(
-            MutableList<ScanFilter>(1) { filter1 },
+            listOf( filterEarGear, filterDigiTail ),
             settings,
             callback
         )

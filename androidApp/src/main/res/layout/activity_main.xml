@@ -6,9 +6,14 @@
     <data>
 
         <import type="biz.wolschon.wag.model.DeviceDetailsViewModel" />
+
         <import type="biz.wolschon.wag.bluetooth.commands.SimpleEarCommand" />
-        <import type="androidx.lifecycle.LiveData"/>
-        <import type="android.bluetooth.BluetoothDevice"/>
+
+        <import type="biz.wolschon.wag.bluetooth.commands.SimpleTailCommand" />
+
+        <import type="androidx.lifecycle.LiveData" />
+
+        <import type="android.bluetooth.BluetoothDevice" />
 
         <variable
             name="viewModel"
@@ -19,125 +24,213 @@
             type="LiveData&lt;Boolean&gt;" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main_view"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".androidApp.MainActivity">
 
-        <Spinner
-            android:id="@+id/connect_device_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="@+id/connect_button"
-            app:layout_constraintBottom_toBottomOf="@+id/connect_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/connect_button" />
-
-        <ToggleButton
-            android:id="@+id/scan_button"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:textOff="@string/action_scan_on"
-            android:textOn="@string/action_scan_off"
-
-            android:enabled="@{permissionsGranted &amp;&amp; viewModel.bluetoothSupported &amp;&amp; viewModel.bluetoothEnabled}"
-            android:checked="@{viewModel.isScanning}"
-            android:onClick="@{(view) -> viewModel.toggleScanning() }"
-
-            app:layout_constraintTop_toTopOf="@+id/connect_button"
-            app:layout_constraintBottom_toBottomOf="@+id/connect_button"
-
-            app:layout_constraintEnd_toStartOf="@id/connect_button" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/connect_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:text="@string/action_connect"
-
-            android:enabled="@{permissionsGranted &amp;&amp; viewModel.bluetoothSupported &amp;&amp; viewModel.bluetoothEnabled}"
-            android:onClick="@{view -> viewModel.connect(context, (BluetoothDevice) connectDeviceSpinner.getSelectedItem())}"
-
-            app:layout_constraintTop_toTopOf="parent"
-
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/single_device_list"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            tools:context=".androidApp.MainActivity">
 
-            app:layout_constraintTop_toBottomOf="@id/connect_device_spinner"
+            <Spinner
+                android:id="@+id/connect_device_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/connect_button"
+                app:layout_constraintEnd_toStartOf="@+id/connect_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/connect_button" />
 
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            <ToggleButton
+                android:id="@+id/scan_button"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:checked="@{viewModel.isScanning}"
+                android:enabled="@{permissionsGranted &amp;&amp; viewModel.bluetoothSupported &amp;&amp; viewModel.bluetoothEnabled}"
 
-            tools:itemCount="2"
-            tools:listitem="@layout/device_list_entry"  />
+                android:onClick="@{(view) -> viewModel.toggleScanning() }"
+                android:textOff="@string/action_scan_on"
+                android:textOn="@string/action_scan_off"
 
+                app:layout_constraintBottom_toBottomOf="@+id/connect_button"
+                app:layout_constraintEnd_toStartOf="@id/connect_button"
 
-    <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:alignmentMode="alignBounds"
-            android:columnCount="3"
-            
-            app:layout_constraintTop_toBottomOf="@id/single_device_list"
-            
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-        
+                app:layout_constraintTop_toTopOf="@+id/connect_button" />
 
-    <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cmd_ltwist"
-            android:enabled="@{viewModel.hasEarGears}"
-            android:onClick='@{view -> viewModel.executeSimpleEarCommand("LETWIST")}' />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/connect_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-     <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cmd_bothtwist"
-            android:enabled="@{viewModel.hasEarGears}"
-            android:onClick='@{view -> viewModel.executeSimpleEarCommand("BOTWIST")}'/>
+                android:enabled="@{permissionsGranted &amp;&amp; viewModel.bluetoothSupported &amp;&amp; viewModel.bluetoothEnabled}"
 
-     <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cmd_rtwist"
-            android:enabled="@{viewModel.hasEarGears}"
-            android:onClick='@{view -> viewModel.executeSimpleEarCommand("RITWIST")}'
-         />
+                android:onClick="@{view -> viewModel.connect(context, (BluetoothDevice) connectDeviceSpinner.getSelectedItem())}"
+                android:text="@string/action_connect"
 
-<!-- next row -->
+                app:layout_constraintEnd_toEndOf="parent"
 
-     <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cmd_ltilt"
-            android:enabled="@{viewModel.hasEarGears}"
-            android:onClick='@{view -> viewModel.executeSimpleEarCommand("LETILT")}' />
+                app:layout_constraintTop_toTopOf="parent" />
 
-     <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cmd_bothtilt"
-            android:enabled="@{viewModel.hasEarGears}"
-            android:onClick='@{view -> viewModel.executeSimpleEarCommand("BOTILT")}'/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/single_device_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-     <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cmd_rtilt"
-            android:enabled="@{viewModel.hasEarGears}"
-            android:onClick='@{view -> viewModel.executeSimpleEarCommand("RITILT")}'/>
+                app:layout_constraintEnd_toEndOf="parent"
 
-    </GridLayout>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/connect_device_spinner"
+
+                tools:itemCount="2"
+                tools:listitem="@layout/device_list_entry" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <GridLayout
+                android:id="@+id/ear_commands"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:alignmentMode="alignBounds"
+                android:columnCount="3"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+
+                android:paddingTop="32dp"
+                app:layout_constraintTop_toBottomOf="@id/single_device_list">
+
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasEarGears}"
+                    android:onClick='@{view -> viewModel.executeSimpleEarCommand("LETWIST")}'
+                    android:text="@string/cmd_ltwist" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasEarGears}"
+                    android:onClick='@{view -> viewModel.executeSimpleEarCommand("BOTWIST")}'
+                    android:text="@string/cmd_bothtwist" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasEarGears}"
+                    android:onClick='@{view -> viewModel.executeSimpleEarCommand("RITWIST")}'
+                    android:text="@string/cmd_rtwist" />
+
+                <!-- next row -->
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasEarGears}"
+                    android:onClick='@{view -> viewModel.executeSimpleEarCommand("LETILT")}'
+                    android:text="@string/cmd_ltilt" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasEarGears}"
+                    android:onClick='@{view -> viewModel.executeSimpleEarCommand("BOTILT")}'
+                    android:text="@string/cmd_bothtilt" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasEarGears}"
+                    android:onClick='@{view -> viewModel.executeSimpleEarCommand("RITILT")}'
+                    android:text="@string/cmd_rtilt" />
+
+            </GridLayout>
+
+
+            <GridLayout
+                android:id="@+id/tail_commands"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:alignmentMode="alignBounds"
+                android:columnCount="3"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+
+                android:paddingTop="32dp"
+                app:layout_constraintTop_toBottomOf="@id/ear_commands">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasDigitails}"
+                    android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILS1")}'
+                    android:text="@string/cmd_tail1" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasDigitails}"
+                    android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILHM")}'
+                    android:text="@string/cmd_tailhm" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasDigitails}"
+                    android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILFA")}'
+                    android:text="@string/cmd_tailfa" />
+
+                <!-- next row -->
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasDigitails}"
+                    android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILS2")}'
+                    android:text="@string/cmd_tail2" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasDigitails}"
+                    android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILER")}'
+                    android:text="@string/cmd_tailer" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasDigitails}"
+                    android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILHA")}'
+                    android:text="@string/cmd_tailsh" />
+
+                <!-- next row -->
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasDigitails}"
+                    android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILS3")}'
+                    android:text="@string/cmd_tail3" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasDigitails}"
+                    android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILET")}'
+                    android:text="@string/cmd_tailet" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.hasDigitails}"
+                    android:onClick='@{view -> viewModel.executeSimpleTailCommand("TAILHA")}'
+                    android:text="@string/cmd_tailha" />
+            </GridLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>

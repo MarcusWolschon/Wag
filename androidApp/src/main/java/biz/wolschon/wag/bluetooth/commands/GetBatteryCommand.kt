@@ -3,15 +3,12 @@ package biz.wolschon.wag.bluetooth.commands
 import androidx.lifecycle.MutableLiveData
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.BluetoothGattDescriptor
 import android.util.Log
 import biz.wolschon.wag.bluetooth.BLECommand
-import biz.wolschon.wag.bluetooth.BLECommandQueue
-import biz.wolschon.wag.R
 import biz.wolschon.wag.bluetooth.DeviceConnection
 
 class GetBatteryCommand(
-    private val batteryText: MutableLiveData<String>,
+    private val batteryPercentage: MutableLiveData<Int?>,
     private val success: MutableLiveData<Boolean>? = null
 ) : BLECommand() {
 
@@ -21,9 +18,15 @@ class GetBatteryCommand(
 
     override fun execute(deviceConnection: DeviceConnection): Boolean {
         val characteristic = deviceConnection.controlOut
-            .apply {
-                value = "BATT".toByteArray()
-            }
+        if (characteristic == null) {
+            Log.e(
+                TAG,
+                "Can't execute GetBatteryCommand because the controlOut characteristic is null"
+            )
+            expectingResult = false
+            return true
+        }
+        characteristic.value = "BATT".toByteArray()
         val result =  deviceConnection.bluetoothGatt.writeCharacteristic(characteristic)
         expectingResult = result
         return result
@@ -35,8 +38,8 @@ class GetBatteryCommand(
     ) {
         val battery = characteristic?.getStringValue(0)
         Log.d(TAG, "onCharacteristicChanged '$battery'")
-//TODO: interpret batteryText into a percentage value
-        batteryText.postValue(battery)
+        // result for EarGear: 92
+        batteryPercentage.postValue(battery?.toIntOrNull())
         success?.postValue(true)
         expectingResult = false
         super.onCharacteristicChanged(gatt, characteristic)

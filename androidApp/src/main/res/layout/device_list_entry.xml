@@ -27,14 +27,15 @@
             android:textColor="@{singleDevice.ready ? @android:color/black : @android:color/darker_gray}"
             tools:text="AA:BB:CC:DD:EE:FF:GG"
 
-            app:drawableStartCompat="@drawable/ic_bluetooth_battery_unknown"
+            android:drawableStart="@{singleDevice.batteryIcon}"
             android:drawablePadding="8dp"
+            tools:ignore="UseCompatTextViewDrawableXml"
 
             app:layout_constraintTop_toTopOf="@id/device_disconnect"
             app:layout_constraintBottom_toBottomOf="@id/device_disconnect"
 
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/device_status"/>
+            app:layout_constraintEnd_toStartOf="@id/device_status" />
 
         <TextView
             android:id="@+id/device_status"
