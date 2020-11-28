@@ -37,7 +37,7 @@ class DeviceScanner(
         }
 
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            Log.i(TAG, "scan result callback received")
+            Log.i(TAG, "sitback received")
             if (result != null) {
                 val mDevices = parent.devices.value?.toMutableList() ?: mutableListOf()
                 val device = result.device
