@@ -4,7 +4,7 @@ plugins {
     id("kotlin-kapt")
 }
 group = "biz.wolschon.wag"
-version = "1.0-SNAPSHOT"
+version = "1.1-SNAPSHOT"
 
 repositories {
     gradlePluginPortal()
@@ -73,8 +73,8 @@ android {
         applicationId = "biz.wolschon.wag"
         minSdkVersion(24)
         targetSdkVersion(30)
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
     }
     buildTypes {
         getByName("release") {

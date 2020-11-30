@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature
-        android:name="android.hardware.BLUETOOTH"
+        android:name="android.hardware.bluetooth"
         android:required="true"/>
     <uses-feature
         android:name="android.hardware.bluetooth_le"
