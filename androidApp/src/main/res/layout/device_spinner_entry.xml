@@ -6,5 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_alignParentStart="true"
     android:layout_centerVertical="true"
+    android:gravity="center_vertical"
+    android:textSize="16sp"
+    android:height="48dp"
     tools:text="AA:BB:CC:DD:EE:FF:GG" />
 

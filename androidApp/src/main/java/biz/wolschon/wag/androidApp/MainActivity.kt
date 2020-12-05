@@ -10,13 +10,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import biz.wolschon.wag.R
 import biz.wolschon.wag.databinding.ActivityMainBinding
-import biz.wolschon.wag.model.DeviceDetailsViewModel
+import biz.wolschon.wag.model.DeviceListViewModel
 import biz.wolschon.wag.model.SingleDeviceListAdapter
 
 class MainActivity : PermissionCheckingActivity() {
 
     private val viewModel by lazy {
-        ViewModelProvider(this).get(DeviceDetailsViewModel::class.java)
+        ViewModelProvider(this).get(DeviceListViewModel::class.java)
     }
 
     private val permissionsGranted = MutableLiveData<Boolean>().also { it.value = false }
@@ -31,7 +31,7 @@ class MainActivity : PermissionCheckingActivity() {
         // device we can connect to
         binding.connectDeviceSpinner.adapter =
             ArrayAdapter<BluetoothDevice>(this, R.layout.device_spinner_entry).also { adapter ->
-                viewModel.devices.observe(this) { list ->
+                viewModel.unconnectedDevices.observe(this) { list ->
                     adapter.clear()
                     adapter.addAll(list)
                 }

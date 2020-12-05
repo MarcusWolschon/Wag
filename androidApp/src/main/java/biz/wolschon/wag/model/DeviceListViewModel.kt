@@ -11,17 +11,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import biz.wolschon.wag.bluetooth.BLECommand
 import biz.wolschon.wag.bluetooth.DeviceScanner
 import biz.wolschon.wag.bluetooth.commands.SimpleEarCommand
 import biz.wolschon.wag.bluetooth.commands.SimpleTailCommand
 
 
-class DeviceDetailsViewModel(private val app: Application) :
+class DeviceListViewModel(private val app: Application) :
     AndroidViewModel(app),
     SingleDeviceViewModel.ConnectionLostListener {
 
@@ -32,6 +29,8 @@ class DeviceDetailsViewModel(private val app: Application) :
     val isBluetoothSupported
         get() = app.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)
 
+
+    private var bluetoothBroadcastReceiver: BroadcastReceiver? = null
 
     val bluetoothEnabled by lazy {
         val mutable = MutableLiveData<Boolean>()
@@ -56,23 +55,69 @@ class DeviceDetailsViewModel(private val app: Application) :
         }
 
         val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
+        bluetoothBroadcastReceiver = mReceiver
         app.registerReceiver(mReceiver, filter)
-        //TODO: take care of unregistering
 
         mutable
     }
+
+    override fun onCleared() {
+        bluetoothBroadcastReceiver?.let {
+            app.unregisterReceiver(bluetoothBroadcastReceiver)
+            bluetoothBroadcastReceiver = null
+        }
+    }
+
     ///////////////////////////////////////////////////////
     //               SCANNING
     ///////////////////////////////////////////////////////
 
-    private val devicesInternal = MutableLiveData<List<BluetoothDevice>>()
-    val devices: LiveData<List<BluetoothDevice>> = devicesInternal
+    /**
+     * All devices currently announcing.
+     */
+    private val allDevices = MutableLiveData<List<BluetoothDevice>>()
+
+    /**
+     * Devices that we can connect to.
+     */
+    val unconnectedDevices by lazy {
+        MediatorLiveData<List<BluetoothDevice>>().also { mediator ->
+            fun update(
+                allDevices: List<BluetoothDevice>,
+                connectedDevices: List<SingleDeviceViewModel>?
+            ) {
+                val connected = connectedDevices ?: listOf()
+                mediator.postValue(allDevices.filterNot { dev -> connected.any { it.address == dev.address } })
+            }
+
+            mediator.addSource(allDevices) { all ->
+                update(
+                    all ?: listOf(),
+                    connectedDevices.value
+                )
+            }
+            mediator.addSource(connectedDevicesInternal) { con ->
+                update(
+                    allDevices.value ?: listOf(), con
+                )
+            }
+        }
+    }
+
+    /**
+     * Internal, mutable version of [isScanning]
+     */
     private val isScanningInternal = MutableLiveData<Boolean>()
+
+    /**
+     * Are we currently scanning for devices?
+     */
     val isScanning: LiveData<Boolean> = isScanningInternal
+
     private val scanner by lazy {
         DeviceScanner(
             bluetoothManager.adapter,
-            devices = devicesInternal,
+            devices = allDevices,
             onDeviceLost = this::onDeviceLost,
             isScanning = isScanningInternal
         )
@@ -99,8 +144,14 @@ class DeviceDetailsViewModel(private val app: Application) :
     ///////////////////////////////////////////////////////
     //               CONNECTIONS
     ///////////////////////////////////////////////////////
-
+    /**
+     * Internal, mutable version of [connectedDevices]
+     */
     private val connectedDevicesInternal = MutableLiveData<MutableList<SingleDeviceViewModel>>()
+
+    /**
+     * Everything we are actively connected to.
+     */
     val connectedDevices: LiveData<List<SingleDeviceViewModel>> =
         Transformations.map(connectedDevicesInternal) {
             it as List<SingleDeviceViewModel>
@@ -123,8 +174,11 @@ class DeviceDetailsViewModel(private val app: Application) :
         connectedDevicesInternal.postValue(list)
     }
 
-    fun connect(context: Context, device: BluetoothDevice) {
-        val list = connectedDevicesInternal.value ?: mutableListOf<SingleDeviceViewModel>()
+    fun connect(context: Context, device: BluetoothDevice?) {
+        if (device == null) {
+            return
+        }
+        val list = connectedDevicesInternal.value ?: mutableListOf()
         list.add(SingleDeviceViewModel(context, device, this))
         connectedDevicesInternal.postValue(list)
     }

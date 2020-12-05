@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="biz.wolschon.wag.model.DeviceDetailsViewModel" />
+        <import type="biz.wolschon.wag.model.DeviceListViewModel" />
         <import type="biz.wolschon.wag.bluetooth.commands.SimpleEarCommand" />
         <import type="biz.wolschon.wag.bluetooth.commands.SimpleTailCommand" />
         <import type="androidx.lifecycle.LiveData"/>
@@ -13,7 +13,7 @@
 
         <variable
             name="viewModel"
-            type="DeviceDetailsViewModel" />
+            type="DeviceListViewModel" />
 
         <variable
             name="permissionsGranted"
