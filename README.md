@@ -2,19 +2,18 @@
 
 This is an independent, 3rd party Android app to remote control "EarGear" and "Digitail" made by [Mechanical Tail Company Limited](https://thetailcompany.com/).
 
+* [Play Store](https://play.google.com/apps/testing/biz.wolschon.wag)
+* [Play Store Console](https://play.google.com/console/app/4972016395846858466/app-dashboard)
+
 # Project status
 
 **Alpha** - generally working with very limited functionality and preliminary UI
 
 Tasks needed for a release 1.0 and reach Beta status:
 
-* Bluetooth connecting and disconnecting working
-* firmware version command working
-* ear commands working
-* TODO: connect BATT command to UI (icons for battery levels already present)
-* TODO: tail commands
 * TODO: finalize UI
 * TODO: app icon and Play Store graphics
+* TODO: more commands
 
 # Protocol
 
