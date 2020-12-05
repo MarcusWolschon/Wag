@@ -4,7 +4,7 @@ plugins {
     id("kotlin-kapt")
 }
 group = "biz.wolschon.wag"
-version = "1.1-SNAPSHOT"
+version = "1.2-SNAPSHOT"
 
 repositories {
     gradlePluginPortal()
@@ -54,7 +54,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
 
     // asking for permissions in a  new way
-    implementation("androidx.activity:activity-ktx:1.2.0-beta01")
+    implementation("androidx.activity:activity-ktx:1.2.0-beta02")
 
 
     // Navigation
@@ -73,8 +73,8 @@ android {
         applicationId = "biz.wolschon.wag"
         minSdkVersion(24)
         targetSdkVersion(30)
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "1.2"
     }
     buildTypes {
         getByName("release") {
