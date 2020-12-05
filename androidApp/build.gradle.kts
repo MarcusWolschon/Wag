@@ -13,10 +13,10 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    val lifecycleVersion = "2.2.0"
+    val lifecycleVersion = "2.3.0-beta01"
 //    val roomVersion = "2.2.5"
     val kotlinVersion = "1.3.72"
-    val navVersion = "2.3.0"
+    val navVersion = "2.3.2"
 
     implementation(project(":shared"))
 
