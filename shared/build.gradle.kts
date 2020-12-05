@@ -15,7 +15,7 @@ repositories {
     mavenCentral()
 }
 kotlin {
-    android()
+    android {}
     ios {
         binaries {
             framework {
@@ -33,7 +33,11 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
+                val lifecycleVersion = "2.3.0-beta01"
                 implementation("com.google.android.material:material:1.2.1")
+
+                // LiveData
+                implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
             }
         }
         val androidTest by getting {

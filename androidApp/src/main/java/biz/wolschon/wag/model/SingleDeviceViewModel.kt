@@ -6,8 +6,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import biz.wolschon.wag.R
-import biz.wolschon.wag.bluetooth.BLECommand
 import biz.wolschon.wag.bluetooth.DeviceConnection
+import biz.wolschon.wag.bluetooth.commands.Command
 
 /**
  * ViewModel for one of multiple, simultaneous connections to devices. (e.g. EarGear and Tail)
@@ -18,8 +18,11 @@ class SingleDeviceViewModel(
     private val listener: ConnectionLostListener
 ) {
     val ready = MutableLiveData<Boolean>()
+
     val versionText = MutableLiveData<String>().also { it.value = "" }
+
     val batteryPercentage = MutableLiveData<Int?>().also { it.value = null }
+
     val batteryIcon = Transformations.map(batteryPercentage) { percentage ->
         ResourcesCompat.getDrawable(
             context.resources,
@@ -78,12 +81,11 @@ class SingleDeviceViewModel(
         // do any cleanup
     }
 
-    fun isCommandCompatible(cmd: BLECommand): Boolean {
-        //TODO: test this
+    fun isCommandCompatible(cmd: Command): Boolean {
         return (cmd.isEarCommand && isEarGear) || (cmd.isTailCommand && isDigitail)
     }
 
-    fun executeCommand(cmd: BLECommand): Boolean {
+    fun executeCommand(cmd: Command): Boolean {
         if (!isCommandCompatible(cmd) || ready.value == false) {
             return false
         }

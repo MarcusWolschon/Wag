@@ -4,13 +4,14 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
 import android.util.Log
-import biz.wolschon.wag.bluetooth.BLECommand
 import biz.wolschon.wag.bluetooth.DeviceConnection
 
 
-class SubscribeControlMessagesCommand() : BLECommand() {
+class SubscribeControlMessagesCommand(private val deviceConnection: DeviceConnection) : Command() {
 
-    override fun execute(deviceConnection: DeviceConnection): Boolean {
+    override fun execute(visitor: CommandExecutionVisitor) {
+        visitor.responseExpected = false
+        visitor.commandSucceeded = false
 
         // tell BLE to expect notifications
         if (!deviceConnection.bluetoothGatt.setCharacteristicNotification(
@@ -31,14 +32,15 @@ class SubscribeControlMessagesCommand() : BLECommand() {
                 TAG,
                 "Can't execute SubscribeControlMessagesCommand because the controlIn characteristic is null"
             )
-            return false
+            visitor.executionCompleted(this)
+            return
         }
         val descriptor = cIn.descriptors[0]
             .apply {
                 value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
 
             }
-        return deviceConnection.bluetoothGatt.writeDescriptor(descriptor)
+        visitor.commandSucceeded = deviceConnection.bluetoothGatt.writeDescriptor(descriptor)
     }
 
 

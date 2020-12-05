@@ -12,8 +12,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import androidx.lifecycle.*
-import biz.wolschon.wag.bluetooth.BLECommand
 import biz.wolschon.wag.bluetooth.DeviceScanner
+import biz.wolschon.wag.bluetooth.commands.Command
 import biz.wolschon.wag.bluetooth.commands.SimpleEarCommand
 import biz.wolschon.wag.bluetooth.commands.SimpleTailCommand
 
@@ -201,7 +201,7 @@ class DeviceListViewModel(private val app: Application) :
      * Execute the given command on all connected devices that are compatible.
      * @return true if executed on at least 1 device
      */
-    fun executeCommand(cmd: BLECommand): Boolean {
+    fun executeCommand(cmd: Command): Boolean {
         val list = connectedDevicesInternal.value ?: return false
         var success = false
         list.forEach { singleDevice ->

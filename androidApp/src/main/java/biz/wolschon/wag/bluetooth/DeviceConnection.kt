@@ -31,7 +31,7 @@ class DeviceConnection(
         Log.d(TAG, "init device=${device.name} address=${device.address}")
         ready.postValue(false)
         bluetoothGatt = device.connectGatt(context, false, this, BluetoothDevice.TRANSPORT_LE)
-        workqueue = BLECommandQueue(bluetoothGatt, statusText, this)
+        workqueue = BLECommandQueue(statusText, this)
     }
 
 
@@ -133,7 +133,7 @@ class DeviceConnection(
 
     private fun doInitialCommand() {
         Log.d(TAG, "initial commands")
-        workqueue.addCommand(SubscribeControlMessagesCommand())
+        workqueue.addCommand(SubscribeControlMessagesCommand(this))
         workqueue.addCommand(
             GetVersionCommand(
                 versionText,
@@ -152,7 +152,7 @@ class DeviceConnection(
 
     override fun onCharacteristicRead(
         gatt: BluetoothGatt,
-        characteristic: BluetoothGattCharacteristic?,
+        characteristic: BluetoothGattCharacteristic,
         status: Int
     ) {
         Log.d(TAG, "onCharacteristicRead()")
@@ -161,15 +161,7 @@ class DeviceConnection(
             workqueue.commandFinished()
             return
         }
-        val cmd = workqueue.currentCommand
-        if (cmd != null) {
-            cmd.onCharacteristicRead(gatt, characteristic, status)
-            if (!cmd.expectingResult) {
-                workqueue.commandFinished()
-            }
-        } else {
-            workqueue.commandFinished()
-        }
+        workqueue.onCharacteristicChanged(characteristic)
     }
 
     override fun onCharacteristicWrite(
@@ -188,10 +180,7 @@ class DeviceConnection(
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "write success")
         }
-        workqueue.currentCommand?.onCharacteristicWrite(gatt, characteristic, status)
-        if (workqueue.currentCommand?.expectingResult != true) {
-            workqueue.commandFinished()
-        }
+        workqueue.onCharacteristicWrite()
     }
 
     override fun onCharacteristicChanged(
@@ -209,16 +198,8 @@ class DeviceConnection(
             )
         }
 //TODO: the device will report  battery-changes regularly on it's own, update batteryText
-        // just for completeness sake
-        val cmd = workqueue.currentCommand
-        if (cmd != null) {
-            cmd.onCharacteristicChanged(gatt, characteristic)
-            if (!cmd.expectingResult) {
-                workqueue.commandFinished()
-            }
-        } else {
-            workqueue.commandFinished()
-        }
+
+        workqueue.onCharacteristicChanged(characteristic)
     }
 
     override fun onDescriptorRead(
@@ -234,8 +215,6 @@ class DeviceConnection(
             workqueue.commandFinished()
             return
         }
-        workqueue.currentCommand?.onDescriptorRead(gatt, descriptor, status)
-        workqueue.commandFinished()
     }
 
     override fun onDescriptorWrite(
@@ -254,14 +233,13 @@ class DeviceConnection(
             workqueue.commandFinished()
             return
         }
-        workqueue.currentCommand?.onDescriptorWrite(gatt, descriptor, status)
-        workqueue.commandFinished()
+        workqueue.onCharacteristicWrite()
     }
 
     ///////////////////////////////////////////////////////////////////
     //       Actions
 
-    fun execute(cmd: BLECommand) {
+    fun execute(cmd: Command) {
         workqueue.addCommand(cmd)
     }
 
