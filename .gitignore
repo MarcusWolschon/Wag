@@ -16,3 +16,4 @@ local.properties
 /androidApp/build/
 /shared/build/
 /keystore/
+/androidApp/release/
