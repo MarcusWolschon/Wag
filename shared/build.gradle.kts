@@ -42,6 +42,8 @@ kotlin {
 
                 // LiveData
                 implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
             }
         }
         val androidTest by getting {
