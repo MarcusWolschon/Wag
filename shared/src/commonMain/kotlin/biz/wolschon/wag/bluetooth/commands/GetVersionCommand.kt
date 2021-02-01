@@ -2,9 +2,7 @@ package biz.wolschon.wag.bluetooth.commands
 
 import biz.wolschon.wag.logging.logDebug
 
-expect class GetVersionCommand
-
-abstract class AbstractGetVersionCommand(
+class GetVersionCommand(
     private val onSuccess: (() -> Unit)? = null
 ) : GetCommand<String>("VER") {
 

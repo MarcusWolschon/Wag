@@ -2,8 +2,9 @@ package biz.wolschon.wag.bluetooth
 
 import androidx.lifecycle.MutableLiveData
 import android.bluetooth.BluetoothGattCharacteristic
-import biz.wolschon.wag.R
+//import biz.wolschon.wag.R
 import android.util.Log
+import biz.wolschon.wag.android.R
 import biz.wolschon.wag.bluetooth.commands.Command
 import biz.wolschon.wag.bluetooth.commands.CommandExecutionVisitor
 import biz.wolschon.wag.logging.logDebug
@@ -16,6 +17,8 @@ class BLECommandQueue(
 
     private val workQueue = LinkedList<Command>()
     private var mCurrentCommand: Command? = null
+
+    @Suppress("unused")
     val currentCommand: Command?
         get() = mCurrentCommand
 
@@ -39,6 +42,7 @@ class BLECommandQueue(
     /**
      * Drop all other commands and add this one to be executed next/now.
      */
+    @Suppress("unused", "MemberVisibilityCanBePrivate")
     fun flushAndAddCommand(cmd: Command) {
         synchronized(workQueue) {
             workQueue.clear()
@@ -52,6 +56,7 @@ class BLECommandQueue(
     /**
      * Drop all other commands OFT THIS TYPE and add this one to be executed next/now.
      */
+    @Suppress("unused")
     fun flushSimilarAndAddCommand(cmd: Command) {
         synchronized(workQueue) {
             val iter = workQueue.iterator()

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="status_ready">Ready</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="status_reconnecting">Reconnecting…</string>
+    <string name="status_discovering">Discovering services…</string>
+    <string name="status_checking_services">Checking services…</string>
+    <string name="status_failed">Failed</string>
+    <string name="status_initializing">Initializing</string>
+
+</resources>

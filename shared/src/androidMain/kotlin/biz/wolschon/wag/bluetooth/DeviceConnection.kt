@@ -1,12 +1,15 @@
+@file:Suppress("UnusedImport")
+
 package biz.wolschon.wag.bluetooth
 
 import android.bluetooth.*
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.asLiveData // do not remove. Android Studio dependencies are glitching
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import biz.wolschon.wag.BuildConfig
-import biz.wolschon.wag.R
+import biz.wolschon.wag.android.BuildConfig
+import biz.wolschon.wag.android.R
 import biz.wolschon.wag.bluetooth.commands.*
 import java.util.*
 
@@ -21,7 +24,7 @@ class DeviceConnection(
     val statusText = MutableLiveData<Int>().also { it.value = R.string.status_initializing }
 
     private val getBatteryCommand = GetBatteryCommand()
-    val batteryPercentage = getBatteryCommand.batteryPercentage
+    val batteryPercentage: LiveData<Int?> = getBatteryCommand.result.asLiveData()
 
     private val getVersionCommand = GetVersionCommand(
         onSuccess = {
@@ -30,7 +33,7 @@ class DeviceConnection(
             statusText.postValue(R.string.status_ready)
         }
     )
-    val versionText = getVersionCommand.result.asLiveData()
+    val versionText: LiveData<String?> = getVersionCommand.result.asLiveData()
 
     internal var bluetoothGatt: BluetoothGatt
     private var workqueue: BLECommandQueue
@@ -158,7 +161,7 @@ class DeviceConnection(
     ) {
         Log.d(TAG, "onCharacteristicRead()")
         if (status != BluetoothGatt.GATT_SUCCESS) {
-            Log.e(TAG, "Characteristic read failed status=" + status)
+            Log.e(TAG, "Characteristic read failed status=$status")
             workqueue.commandFinished()
             return
         }

@@ -1,12 +1,8 @@
 package biz.wolschon.wag.bluetooth.commands
 
 import biz.wolschon.wag.logging.logDebug
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
-expect class GetBatteryCommand
-
-abstract class AbstractGetBatteryCommand(
+class GetBatteryCommand(
 
 ) : GetCommand<Int>("BATT") {
 
