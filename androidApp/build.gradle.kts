@@ -15,7 +15,7 @@ repositories {
 dependencies {
     val lifecycleVersion = "2.3.0-beta01"
 //    val roomVersion = "2.2.5"
-    val kotlinVersion = "1.3.72"
+    val kotlinVersion = "1.4.0"
     val navVersion = "2.3.2"
 
     implementation(project(":shared"))
@@ -56,16 +56,13 @@ dependencies {
     // asking for permissions in a  new way
     implementation("androidx.activity:activity-ktx:1.2.0-rc01")
 
-
     // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
     //androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 
-
-
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
 }
 android {
     compileSdkVersion(30)
