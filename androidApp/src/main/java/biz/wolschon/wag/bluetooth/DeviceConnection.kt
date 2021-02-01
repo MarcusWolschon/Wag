@@ -4,6 +4,7 @@ import android.bluetooth.*
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import biz.wolschon.wag.BuildConfig
 import biz.wolschon.wag.R
 import biz.wolschon.wag.bluetooth.commands.*
@@ -12,13 +13,24 @@ import java.util.*
 
 class DeviceConnection(
     context: Context,
-    private val ready: MutableLiveData<Boolean>,
-    private val versionText: MutableLiveData<String>,
-    private val batteryPercentage: MutableLiveData<Int?>?,
-    private val statusText: MutableLiveData<Int>,
     val device: BluetoothDevice,
-    val onDisconnect: () -> Unit
+    private val onDisconnect: () -> Unit
 ) : BluetoothGattCallback() {
+    val ready = MutableLiveData<Boolean>()
+
+    val statusText = MutableLiveData<Int>().also { it.value = R.string.status_initializing }
+
+    private val getBatteryCommand = GetBatteryCommand()
+    val batteryPercentage = getBatteryCommand.batteryPercentage
+
+    private val getVersionCommand = GetVersionCommand(
+        onSuccess = {
+            // if this commands succeeds, we are ready
+            ready.postValue(true)
+            statusText.postValue(R.string.status_ready)
+        }
+    )
+    val versionText = getVersionCommand.result.asLiveData()
 
     internal var bluetoothGatt: BluetoothGatt
     private var workqueue: BLECommandQueue
@@ -134,19 +146,8 @@ class DeviceConnection(
     private fun doInitialCommand() {
         Log.d(TAG, "initial commands")
         workqueue.addCommand(SubscribeControlMessagesCommand(this))
-        workqueue.addCommand(
-            GetVersionCommand(
-                versionText,
-                onSuccess = {
-                    // if this commands succeeds, we are ready
-                    ready.postValue(true)
-                    statusText.postValue(R.string.status_ready)
-                }
-            )
-        )
-        if (batteryPercentage != null) {
-            workqueue.addCommand(GetBatteryCommand(batteryPercentage))
-        }
+        workqueue.addCommand(getVersionCommand)
+        workqueue.addCommand(getBatteryCommand)
     }
 
 

@@ -1,9 +1,7 @@
 package biz.wolschon.wag.bluetooth.commands
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 
-actual class GetBatteryCommand(
-    private val batteryPercentage: MutableLiveData<Int?>
-) : AbstractGetBatteryCommand(
-    reportResult = {battery -> batteryPercentage.postValue(battery)}
-)
+actual class GetBatteryCommand : AbstractGetBatteryCommand() {
+    val batteryPercentage by lazy { result.asLiveData() }
+}

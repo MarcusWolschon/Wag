@@ -1,5 +1,9 @@
 package biz.wolschon.wag.bluetooth.commands
 
+/**
+ * To be executed by a platform specific implementation,
+ * commands get visited by a class implementing this interface.
+ */
 interface CommandExecutionVisitor {
 
 

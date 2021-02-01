@@ -1,28 +1,21 @@
 package biz.wolschon.wag.bluetooth.commands
 
 import biz.wolschon.wag.logging.logDebug
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 expect class GetBatteryCommand
 
 abstract class AbstractGetBatteryCommand(
-    private val reportResult: ((Int?) -> Unit),
-) : Command() {
+
+) : GetCommand<Int>("BATT") {
+
     override val isTailCommand: Boolean = false
     override val isEarCommand: Boolean = true
 
-    override fun execute(visitor: CommandExecutionVisitor) {
-        if (visitor.sendCommandString("BATT")) {
-            visitor.responseExpected = true
-        } else {
-            visitor.commandSucceeded = false
-            visitor.responseExpected = false
-            visitor.executionCompleted(this)
-        }
-    }
-
     override fun handleCommandResponse(visitor: CommandExecutionVisitor, response: String) {
         logDebug(TAG, "onCharacteristicChanged '$response'")
-        reportResult.invoke(response.toIntOrNull())
+        internalResult.tryEmit(response.toIntOrNull()) // this never fails for a StateFlow
         visitor.commandSucceeded = true
         visitor.responseExpected = false
         super.handleCommandResponse(visitor, response)

@@ -3,7 +3,6 @@ package biz.wolschon.wag.model
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import biz.wolschon.wag.R
 import biz.wolschon.wag.bluetooth.DeviceConnection
@@ -12,16 +11,24 @@ import biz.wolschon.wag.bluetooth.commands.Command
 /**
  * ViewModel for one of multiple, simultaneous connections to devices. (e.g. EarGear and Tail)
  */
+@Suppress("MemberVisibilityCanBePrivate")
 class SingleDeviceViewModel(
     context: Context,
     device: BluetoothDevice,
     private val listener: ConnectionLostListener
 ) {
-    val ready = MutableLiveData<Boolean>()
+    val connection = DeviceConnection(
+        context = context,
+        device = device
+    ) {
+        listener.onConnectionLost(this)
+    }
 
-    val versionText = MutableLiveData<String>().also { it.value = "" }
+    val ready = connection.ready
 
-    val batteryPercentage = MutableLiveData<Int?>().also { it.value = null }
+    val versionText = connection.versionText
+
+    val batteryPercentage = connection.batteryPercentage
 
     val batteryIcon = Transformations.map(batteryPercentage) { percentage ->
         ResourcesCompat.getDrawable(
@@ -43,8 +50,7 @@ class SingleDeviceViewModel(
             context.theme
         )
     }
-    private val statusTextResource =
-        MutableLiveData<Int>().also { it.value = R.string.status_initializing }
+    private val statusTextResource = connection.statusText
     val statusText = Transformations.map(statusTextResource) {
         if (it == 0) {
             context.getString(R.string.status_initializing)
@@ -66,16 +72,7 @@ class SingleDeviceViewModel(
     val isDigitail: Boolean = device.name == BLEConstants.NAME_DIGITAIL
     val displayName =
         Transformations.map(versionText) { versionText -> if (name.isBlank()) "($address) $versionText" else "$name $versionText" }
-    val connection = DeviceConnection(
-        context = context,
-        ready = ready,
-        versionText = versionText,
-        batteryPercentage = batteryPercentage,
-        statusText = statusTextResource,
-        device = device
-    ) {
-        listener.onConnectionLost(this)
-    }
+
 
     internal fun onDeviceLost() {
         // do any cleanup
