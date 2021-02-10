@@ -38,7 +38,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 val lifecycleVersion = "2.3.0-beta01"
-                implementation("com.google.android.material:material:1.2.1")
+                implementation("com.google.android.material:material:1.3.0")
 
                 // LiveData
                 implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")

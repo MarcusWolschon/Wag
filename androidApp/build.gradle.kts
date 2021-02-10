@@ -50,11 +50,11 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
-    implementation("com.google.android.material:material:1.2.1")
+    implementation("com.google.android.material:material:1.3.0")
     implementation("androidx.appcompat:appcompat:1.3.0-beta01")
 
     // asking for permissions in a  new way
-    implementation("androidx.activity:activity-ktx:1.2.0-rc01")
+    implementation("androidx.activity:activity-ktx:1.2.0")
 
     // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
